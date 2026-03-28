@@ -145,8 +145,8 @@ header .tagline {
   margin: 0 auto;
   position: relative;
   z-index: 5;
-  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
   transform-origin: center bottom;
+  will-change: transform;
 }
 
 .cap-top {
@@ -208,9 +208,8 @@ header .tagline {
   border-radius: 3px 0 0 3px;
 }
 
-/* cap open state */
+/* cap open state — driven by JS spring physics, CSS is fallback only */
 .bottle.opened .cap {
-  transform: translateY(-28px) rotateX(-15deg);
   pointer-events: auto;
 }
 
@@ -1374,27 +1373,155 @@ projects.forEach((p, idx) => {
   grid.appendChild(wrap);
 });
 
+// ═══ SPRING PHYSICS ENGINE ═══
+function springPop(cap, targetY, targetRot, onDone) {
+  // Spring parameters
+  const mass = 1;
+  const stiffness = 320;   // snappy
+  const damping = 18;       // underdamped = bouncy
+  const dt = 1 / 60;
+
+  // State: [y position, y velocity, rotation, rot velocity]
+  let y = 0, vy = 0;
+  let r = 0, vr = 0;
+  let frame;
+
+  // Phase 1: compress down briefly (resistance before pop)
+  const compressY = 4;
+  const compressDur = 80; // ms
+  let startTime = null;
+  let phase = 'compress';
+
+  function step(timestamp) {
+    if (!startTime) startTime = timestamp;
+    const elapsed = timestamp - startTime;
+
+    if (phase === 'compress') {
+      // Ease down slightly — building tension
+      const t = Math.min(elapsed / compressDur, 1);
+      const ease = t * t; // accelerate into compress
+      cap.style.transform = `translateY(${compressY * ease}px) scaleY(${1 - 0.06 * ease}) scaleX(${1 + 0.03 * ease})`;
+      if (t >= 1) {
+        phase = 'spring';
+        startTime = timestamp;
+        y = compressY;
+        vy = 0;
+        r = 0;
+        vr = 0;
+      }
+      frame = requestAnimationFrame(step);
+      return;
+    }
+
+    // Phase 2: spring simulation
+    // Y spring toward targetY
+    const forceY = -stiffness * (y - targetY);
+    const dampY = -damping * vy;
+    vy += (forceY + dampY) / mass * dt;
+    y += vy * dt;
+
+    // Rotation spring toward targetRot
+    const forceR = -stiffness * (r - targetRot);
+    const dampR = -damping * vr;
+    vr += (forceR + dampR) / mass * dt;
+    r += vr * dt;
+
+    // Squash & stretch based on velocity — the satisfying part
+    const speed = Math.abs(vy);
+    const squash = 1 + Math.min(speed * 0.003, 0.15);
+    const stretch = 1 / squash;
+
+    cap.style.transform = `translateY(${y}px) rotateX(${r}deg) scaleY(${stretch}) scaleX(${squash})`;
+
+    // Check if settled
+    if (Math.abs(y - targetY) < 0.3 && Math.abs(vy) < 0.5 &&
+        Math.abs(r - targetRot) < 0.3 && Math.abs(vr) < 0.5) {
+      cap.style.transform = `translateY(${targetY}px) rotateX(${targetRot}deg)`;
+      if (onDone) onDone();
+      return;
+    }
+
+    frame = requestAnimationFrame(step);
+  }
+
+  frame = requestAnimationFrame(step);
+  return () => cancelAnimationFrame(frame);
+}
+
+function springClose(cap, onDone) {
+  const stiffness = 400;
+  const damping = 22;
+  const dt = 1 / 60;
+
+  // Parse current position from transform
+  const match = cap.style.transform.match(/translateY\(([-\d.]+)px\)/);
+  let y = match ? parseFloat(match[1]) : -32;
+  let vy = 0;
+  let r = parseFloat((cap.style.transform.match(/rotateX\(([-\d.]+)deg\)/) || [0, -15])[1]);
+  let vr = 0;
+  let frame;
+
+  function step() {
+    const forceY = -stiffness * y;       // target = 0
+    const dampY = -damping * vy;
+    vy += (forceY + dampY) * dt;
+    y += vy * dt;
+
+    const forceR = -stiffness * r;
+    const dampR = -damping * vr;
+    vr += (forceR + dampR) * dt;
+    r += vr * dt;
+
+    cap.style.transform = `translateY(${y}px) rotateX(${r}deg)`;
+
+    if (Math.abs(y) < 0.3 && Math.abs(vy) < 0.5) {
+      cap.style.transform = '';
+      if (onDone) onDone();
+      return;
+    }
+    frame = requestAnimationFrame(step);
+  }
+
+  frame = requestAnimationFrame(step);
+  return () => cancelAnimationFrame(frame);
+}
+
 // ═══ CLICK HANDLER ═══
 let hoverTimers = {};
+const activeAnims = new Map();
 
 document.querySelectorAll('.bottle').forEach(bottle => {
   const idx = bottle.dataset.idx;
+  const cap = bottle.querySelector('.cap');
 
   bottle.addEventListener('click', (e) => {
     if (e.target.closest('.preview-btn')) return;
+
+    // Cancel any running animation on this bottle
+    if (activeAnims.has(idx)) { activeAnims.get(idx)(); activeAnims.delete(idx); }
 
     const isOpened = bottle.classList.contains('opened');
     if (isOpened) {
       bottle.classList.remove('opened');
       Snd.capClose();
+      const cancel = springClose(cap);
+      activeAnims.set(idx, cancel);
     } else {
       // close any other opened bottle
       document.querySelectorAll('.bottle.opened').forEach(b => {
+        const bIdx = b.dataset.idx;
+        const bCap = b.querySelector('.cap');
         b.classList.remove('opened');
+        if (activeAnims.has(bIdx)) { activeAnims.get(bIdx)(); activeAnims.delete(bIdx); }
+        springClose(bCap);
       });
       bottle.classList.add('opened');
       Snd.capOpen();
-      setTimeout(() => Snd.pour(), 350);
+      const cancel = springPop(cap, -32, -15, () => {
+        activeAnims.delete(idx);
+        Snd.pour();
+      });
+      activeAnims.set(idx, cancel);
     }
   });
 
