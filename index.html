@@ -126,6 +126,7 @@ header .tagline {
   width: 210px;
   cursor: pointer;
   transition: transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94), filter 0.4s ease;
+  transform-style: preserve-3d;
 }
 
 @media (max-width: 600px) {
@@ -209,7 +210,7 @@ header .tagline {
 
 /* cap open state */
 .bottle.opened .cap {
-  transform: rotateZ(90deg) translateY(-24px);
+  transform: rotateX(-110deg) translateY(-8px);
   pointer-events: auto;
 }
 
@@ -1229,7 +1230,7 @@ const projects = [
     rx: 'CF-2024',
     dose: 'Real-time / Per article',
     tags: ['React', 'Chrome Extension'],
-    url: 'https://github.com/melmarion/clearframe', // Chrome extension — no web deploy
+    url: 'https://github.com/melmarion/ground-news', // Chrome extension — no web deploy
     rotate: -2.5,
     hasCanvas: true,
     canvasId: 'cv4'
