@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>I Calibrated a Persuasion Model on 126K Human Interactions. Here's What I Found.</title>
+<meta name="description" content="Persuasion-Max: a 5-layer mechanistic prediction engine that diagnoses WHY a message works and WHAT to change. Open source. Calibrated on real behavioral data.">
+<meta property="og:title" content="I Calibrated a Persuasion Model on 126K Human Interactions">
+<meta property="og:description" content="The same technique produces dramatically different outcomes depending on recipient personality. Here's the math.">
+<meta property="og:type" content="article">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #0a0a0f;
+  color: rgba(255,255,255,0.75);
+  font-family: 'Outfit', sans-serif;
+  font-weight: 300;
+  font-size: 17px;
+  line-height: 1.85;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+::selection { background: rgba(180,120,40,0.4); color: #fff; }
+a { color: rgba(180,140,60,0.9); text-decoration: none; border-bottom: 1px solid rgba(180,140,60,0.2); transition: border-color 0.2s; }
+a:hover { border-color: rgba(180,140,60,0.6); }
+
+/* ambient light */
+body::before {
+  content: '';
+  position: fixed;
+  top: -120px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 350px;
+  background: radial-gradient(ellipse at center, rgba(180,120,40,0.04) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 24px;
+  position: relative;
+  z-index: 1;
+}
+
+/* nav */
+nav {
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  margin-bottom: 60px;
+}
+nav a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  border: none;
+}
+nav a:hover { color: rgba(255,255,255,0.6); }
+
+/* header */
+.post-date {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.2);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+h1 {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  line-height: 1.15;
+  color: #fff;
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+}
+.subtitle {
+  font-size: 1.1rem;
+  color: rgba(255,255,255,0.45);
+  font-style: italic;
+  margin-bottom: 48px;
+  padding-bottom: 48px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+/* body */
+h2 {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: rgba(255,255,255,0.9);
+  margin: 48px 0 16px;
+  letter-spacing: -0.01em;
+}
+p { margin-bottom: 20px; }
+strong { color: rgba(255,255,255,0.9); font-weight: 500; }
+em { color: rgba(255,255,255,0.55); }
+
+/* highlight blocks */
+.finding {
+  background: linear-gradient(135deg, rgba(180,120,40,0.08), rgba(180,120,40,0.03));
+  border-left: 3px solid rgba(180,120,40,0.4);
+  padding: 20px 24px;
+  margin: 28px 0;
+  border-radius: 0 8px 8px 0;
+}
+.finding strong { color: rgba(180,140,60,0.95); }
+
+/* code/metrics */
+.metric {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85em;
+  color: rgba(180,140,60,0.8);
+  background: rgba(180,120,40,0.08);
+  padding: 2px 7px;
+  border-radius: 3px;
+}
+
+/* layer diagram */
+.layers {
+  margin: 32px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.layer {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  background: rgba(255,255,255,0.02);
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.04);
+  transition: border-color 0.3s, background 0.3s;
+}
+.layer:hover {
+  border-color: rgba(180,120,40,0.15);
+  background: rgba(180,120,40,0.04);
+}
+.layer-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: rgba(180,140,60,0.5);
+  letter-spacing: 0.1em;
+  min-width: 20px;
+}
+.layer-name {
+  font-weight: 500;
+  color: rgba(255,255,255,0.8);
+  font-size: 0.95rem;
+}
+.layer-detail {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.35);
+  margin-left: auto;
+}
+
+/* stats grid */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 32px 0;
+}
+@media (max-width: 500px) { .stats { grid-template-columns: 1fr; } }
+.stat {
+  text-align: center;
+  padding: 20px 12px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.04);
+  border-radius: 8px;
+}
+.stat-val {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 1.6rem;
+  color: rgba(180,140,60,0.85);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.25);
+}
+
+/* table */
+.matrix {
+  width: 100%;
+  margin: 24px 0;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.matrix th {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.matrix td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  color: rgba(255,255,255,0.6);
+}
+.matrix tr:hover td { background: rgba(180,120,40,0.03); }
+.matrix .val { font-family: 'JetBrains Mono', monospace; color: rgba(180,140,60,0.8); font-size: 0.8rem; }
+.matrix .neg { color: rgba(239,68,68,0.7); }
+
+/* cta */
+.cta {
+  margin: 60px 0;
+  padding: 32px;
+  text-align: center;
+  background: linear-gradient(135deg, rgba(180,120,40,0.08), rgba(180,120,40,0.02));
+  border: 1px solid rgba(180,120,40,0.12);
+  border-radius: 12px;
+}
+.cta a {
+  display: inline-block;
+  padding: 12px 32px;
+  background: linear-gradient(135deg, rgba(180,120,40,0.5), rgba(160,100,30,0.35));
+  border: 1px solid rgba(180,120,40,0.3);
+  border-radius: 8px;
+  color: #e0d0b0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: all 0.25s;
+}
+.cta a:hover {
+  background: linear-gradient(135deg, rgba(180,120,40,0.7), rgba(160,100,30,0.5));
+  transform: translateY(-2px);
+}
+
+/* footer */
+footer {
+  padding: 40px 0;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  margin-top: 60px;
+}
+footer p {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.2);
+  letter-spacing: 0.08em;
+}
+footer a { color: rgba(255,255,255,0.3); border: none; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<nav>
+  <a href="/">&larr; melmarion</a>
+</nav>
+
+<div class="post-date">March 2026 &middot; 8 min read</div>
+
+<h1>I Calibrated a Persuasion Model on 126,288 Human Interactions. Here&rsquo;s What the Data Actually Says.</h1>
+
+<p class="subtitle">Most persuasion advice is folk wisdom dressed up as science. I built a system that checks.</p>
+
+<p>There&rsquo;s a genre of advice that sounds like this: <em>&ldquo;Use social proof. Appeal to authority. Create urgency.&rdquo;</em> It comes from textbooks, TED talks, and LinkedIn posts with 40,000 likes. It sounds right. It feels scientific. And it treats persuasion like a universal lever &mdash; push it, and people comply.</p>
+
+<p>I spent the last two years building a system to test that assumption empirically. <strong>The short answer is that it&rsquo;s wrong.</strong> The same technique, applied to two different people, can produce a 21.8 percentage point difference in compliance. Persuasion isn&rsquo;t a lever. It&rsquo;s a lock, and the key changes depending on who&rsquo;s holding the door.</p>
+
+<p>The system is called <a href="https://github.com/melmarion/Persuasion-Max">Persuasion-Max</a>. It&rsquo;s open source. Here&rsquo;s what it does, how it works, and what the data revealed.</p>
+
+<h2>The architecture</h2>
+
+<p>Persuasion-Max is a 5-layer pipeline. Each layer transforms the input into a richer representation, and each layer was built because the previous one wasn&rsquo;t sufficient.</p>
+
+<div class="layers">
+  <div class="layer">
+    <span class="layer-num">01</span>
+    <span class="layer-name">Linguistic Surface</span>
+    <span class="layer-detail">12 features</span>
+  </div>
+  <div class="layer">
+    <span class="layer-num">02</span>
+    <span class="layer-name">Cognitive Appraisal</span>
+    <span class="layer-detail">7 dimensions</span>
+  </div>
+  <div class="layer">
+    <span class="layer-num">03</span>
+    <span class="layer-name">Technique Detection</span>
+    <span class="layer-detail">40-technique Zeng taxonomy</span>
+  </div>
+  <div class="layer">
+    <span class="layer-num">04</span>
+    <span class="layer-name">Recipient Modeling</span>
+    <span class="layer-detail">16-dimension personality profile</span>
+  </div>
+  <div class="layer">
+    <span class="layer-num">05</span>
+    <span class="layer-name">Domain Circuit Prediction</span>
+    <span class="layer-detail">ecommerce, campaign, crisis PR</span>
+  </div>
+</div>
+
+<p>The first layer extracts surface-level linguistic features: reading difficulty, emotional valence, pronoun ratios, sentence complexity. The kind of thing you&rsquo;d get from a sentiment analysis tool, but tuned for persuasion-relevant signals.</p>
+
+<p>The second layer maps text onto <strong>cognitive appraisal dimensions</strong> &mdash; a framework from Smith &amp; Ellsworth (1985) that describes how humans evaluate incoming information along axes like novelty, certainty, goal relevance, coping potential, and agency. This is the layer that captures <em>how the message makes you feel</em> before you&rsquo;ve consciously processed it.</p>
+
+<p>The third layer identifies which of 40 named persuasion techniques are present, using the Zeng taxonomy from SemEval. Anchoring. Social proof. Loss framing. Emotional appeal. Bandwagon. Each one is detected and scored.</p>
+
+<p>The fourth layer is where it gets interesting. Instead of treating the recipient as a generic &ldquo;human,&rdquo; this layer builds a 16-dimension profile: Big Five personality traits, Moral Foundations (Haidt), ideology markers, and cognitive style. The same message hits differently depending on who receives it. This layer models that.</p>
+
+<p>The fifth layer combines everything into domain-specific behavioral predictions. Because persuasion in ecommerce is mechanistically different from persuasion in political campaigns, which is different from crisis PR. Cross-domain transfer doesn&rsquo;t work &mdash; and I have the numbers to prove it.</p>
+
+<h2>The data</h2>
+
+<div class="stats">
+  <div class="stat">
+    <div class="stat-val">126K</div>
+    <div class="stat-label">Human interactions</div>
+  </div>
+  <div class="stat">
+    <div class="stat-val">329</div>
+    <div class="stat-label">Automated tests</div>
+  </div>
+  <div class="stat">
+    <div class="stat-val">302</div>
+    <div class="stat-label">Documented parameters</div>
+  </div>
+</div>
+
+<p>The calibration dataset combines four sources: <strong>DailyPersuasion</strong> (78K dialogues across 35 domains), <strong>HumanChoicePrediction</strong> (48K real binary decisions where humans chose between competing messages), <strong>PersuGPT</strong>, and <strong>PERSUADE 2.0</strong>. Every parameter in the system has a provenance tag: <span class="metric">1% FITTED</span> on real data, <span class="metric">61% CONSTRAINED</span> from published literature, <span class="metric">37% UNCALIBRATED</span> with documented assumptions.</p>
+
+<p>I track this because hand-assigned numbers are the silent killer of behavioral models. If you don&rsquo;t know which weights came from data and which came from intuition, you don&rsquo;t know what your model actually learned.</p>
+
+<h2>Finding 1: Linguistic features matter more than you&rsquo;d think</h2>
+
+<div class="finding">
+  <strong>Linguistic surface features contribute +10 percentage points AUC over cognitive appraisal alone.</strong> The way you say it matters as much as what you say. Sentence structure, reading level, pronoun choice &mdash; these aren&rsquo;t noise. They&rsquo;re signal.
+</div>
+
+<p>This was counterintuitive. The appraisal layer captures meaning. The linguistic layer captures form. I expected meaning to dominate. Instead, adding surface features on top of appraisal produced a consistent, significant improvement in prediction accuracy. The implication is that persuasion operates on multiple cognitive channels simultaneously &mdash; you&rsquo;re processing <em>what</em> someone is saying and <em>how</em> they&rsquo;re saying it, and both contribute to whether you comply.</p>
+
+<h2>Finding 2: Technique detection adds zero incremental signal</h2>
+
+<div class="finding">
+  <strong>Binary technique detection (is anchoring present: yes/no) adds zero incremental AUC.</strong> Knowing which techniques are used, without knowing who they&rsquo;re used on, has no predictive value.
+</div>
+
+<p>This one surprised me. The entire persuasion advice industry is built on technique identification: <em>learn these 12 techniques and you&rsquo;ll be more persuasive.</em> But when I added technique detection as a binary feature to the model, it contributed nothing. Zero. The model already had all the signal it needed from linguistic and appraisal features.</p>
+
+<p>The techniques only become predictive when you cross them with recipient personality &mdash; which leads to the main finding.</p>
+
+<h2>Finding 3: The 21.8pp persona compliance spread</h2>
+
+<div class="finding">
+  <strong>The same persuasion technique produces up to a 21.8 percentage point difference in compliance probability depending on recipient personality.</strong> Persuasion is not universal. It is recipient-dependent.
+</div>
+
+<p>I built a 400-cell interaction matrix crossing 40 techniques against 10 persona archetypes. The spread is enormous. Here&rsquo;s a sample:</p>
+
+<table class="matrix">
+  <tr>
+    <th>Technique</th>
+    <th>High Openness</th>
+    <th>High Conscientiousness</th>
+    <th>Spread</th>
+  </tr>
+  <tr>
+    <td>Storytelling</td>
+    <td class="val">+14.2pp</td>
+    <td class="val neg">+1.8pp</td>
+    <td class="val">12.4pp</td>
+  </tr>
+  <tr>
+    <td>Evidence-based framing</td>
+    <td class="val">+3.1pp</td>
+    <td class="val">+18.6pp</td>
+    <td class="val">15.5pp</td>
+  </tr>
+  <tr>
+    <td>Moral reframing</td>
+    <td class="val">+11.3pp</td>
+    <td class="val neg">-2.1pp</td>
+    <td class="val">13.4pp</td>
+  </tr>
+  <tr>
+    <td>Loss framing</td>
+    <td class="val neg">+0.4pp</td>
+    <td class="val">+16.9pp</td>
+    <td class="val">16.5pp</td>
+  </tr>
+</table>
+
+<p>Storytelling works on people high in openness. Evidence works on people high in conscientiousness. Moral reframing &mdash; matching the message to the recipient&rsquo;s moral foundations (Feinberg &amp; Willer, 2015) &mdash; produces <span class="metric">+8.4pp</span> when the foundation is correctly matched and can actually <em>backfire</em> when mismatched. The technique isn&rsquo;t good or bad. It&rsquo;s good <em>for someone</em>.</p>
+
+<h2>Finding 4: Domain specificity is real</h2>
+
+<div class="finding">
+  <strong>Cross-domain weight transfer degrades AUC by 10&ndash;13 percentage points.</strong> A persuasion model trained on ecommerce data performs significantly worse on political campaigns, and vice versa.
+</div>
+
+<p>This confirms what practitioners intuit but the field largely ignores: persuasion mechanics are context-dependent. The features that predict purchase behavior are not the same features that predict vote change. The system maintains separate domain-specific weight sets for this reason.</p>
+
+<p>One domain-specific finding worth highlighting: in crisis PR, defensive techniques like whataboutism trigger a <span class="metric">46.5%</span> retaliation probability. The technique that feels protective is actually accelerating the crisis.</p>
+
+<h2>Finding 5: Authenticity outperforms strategy</h2>
+
+<p>This one wasn&rsquo;t in the calibration data. It emerged from a companion project &mdash; <a href="https://github.com/melmarion/read-the-room-ios">Read the Room</a>, an iOS app where you practice influence techniques on 14 AI characters with full psychological profiles.</p>
+
+<p>The last character is a therapist. I gave her no defense mechanisms. Instead, her profile reads: <em>&ldquo;None &mdash; she detects yours.&rdquo;</em> Every named technique in the taxonomy fails on her. The only responses that score points are authentic ones.</p>
+
+<p>I didn&rsquo;t design that as a philosophical statement. It fell out of the scoring model. Forty techniques, tested against fourteen personality profiles, and the architecture arrived at a conclusion: <strong>when the recipient has high psychological sophistication, technique detection flips from asset to liability.</strong> The recipient recognizes the technique, attributes manipulative intent, and compliance drops below baseline.</p>
+
+<p>The math says authenticity isn&rsquo;t a moral choice. It&rsquo;s a strategy that dominates when the other person is paying attention.</p>
+
+<h2>What this is for</h2>
+
+<p>Persuasion-Max isn&rsquo;t a tool for manipulating people. It&rsquo;s a diagnostic tool for understanding <em>why</em> messages work or don&rsquo;t work, and for building products that communicate more effectively with diverse audiences.</p>
+
+<p>If you&rsquo;re writing onboarding copy and different user segments respond differently, this system can tell you why. If you&rsquo;re building a recommendation engine and need to understand how framing affects choice, this system models that. If you&rsquo;re doing trust &amp; safety work and need to detect influence techniques in the wild, the technique detection layer is a starting point.</p>
+
+<p>The full system includes 17 FastAPI endpoints, 12 MCP tools for Claude integration, an interactive SVG brain visualization, and 329 automated tests. Every parameter has a provenance tag. The weight registry is auditable.</p>
+
+<div class="cta">
+  <p style="margin-bottom: 16px; color: rgba(255,255,255,0.5); font-size: 0.9rem;">The source code, calibration data, and full documentation are on GitHub.</p>
+  <a href="https://github.com/melmarion/Persuasion-Max">View Persuasion-Max on GitHub &rarr;</a>
+</div>
+
+<footer>
+  <p>Marion Moranetz &middot; <a href="https://github.com/melmarion">github.com/melmarion</a> &middot; <a href="https://linkedin.com/in/m-marion">LinkedIn</a></p>
+</footer>
+
+</div>
+
+</body>
+</html>
