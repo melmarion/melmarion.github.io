@@ -1,809 +1,1519 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Marion Moranetz</title>
-<meta name="description" content="Computational behavioral scientist. 80 repos spanning iOS apps, browser games, and persuasion modeling systems."/>
-<meta property="og:title" content="Marion Moranetz — Behavioral Science + Engineering"/>
-<meta property="og:description" content="Computational behavioral scientist. Persuasion-Max, 34 iOS apps, 39 browser games."/>
-<meta property="og:type" content="website"/>
-<meta name="twitter:card" content="summary_large_image"/>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,900;1,400;1,900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>melmarion pharmacy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   DESIGN TOKENS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-:root {
-  --bg:       #0d0d0d;
-  --bg1:      #141414;
-  --bg2:      #191919;
-  --line:     #242424;
-  --line2:    #2e2e2e;
-  --text:     #ececec;
-  --mid:      #888;
-  --low:      #444;
-  --lower:    #2a2a2a;
-  --white:    #fff;
-  --accent:   #f0e040;   /* ← single accent: warm yellow. deliberate. */
-  --ff:       'Archivo', system-ui, sans-serif;
-  --ffi:      'Instrument Serif', Georgia, serif;
-  --ease:     cubic-bezier(.25,.46,.45,.94);
-  --ease-out: cubic-bezier(.16,1,.3,1);
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   BASE
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
 body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--ff);
-  font-size: 14px;
-  line-height: 1.5;
+  background: #0a0a0f;
+  color: #e0e0e0;
+  font-family: 'Outfit', sans-serif;
   min-height: 100vh;
   overflow-x: hidden;
 }
-a { color: inherit; text-decoration: none; }
-::selection { background: var(--accent); color: #000; }
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   SCROLL ANIMATIONS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.reveal {
-  opacity: 0;
-  transform: translateY(28px);
-  transition: opacity .65s var(--ease-out), transform .65s var(--ease-out);
+/* ambient top light */
+body::before {
+  content: '';
+  position: fixed;
+  top: -120px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 350px;
+  background: radial-gradient(ellipse at center, rgba(255,255,255,0.06) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
 }
-.reveal.in { opacity: 1; transform: none; }
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   LAYOUT
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.col {
+header {
+  text-align: center;
+  padding: 60px 20px 40px;
+  position: relative;
+  z-index: 1;
+}
+
+header h1 {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+header .subtitle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(0.7rem, 1.8vw, 0.85rem);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  margin-bottom: 14px;
+}
+
+header .tagline {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 300;
+  font-size: clamp(0.85rem, 2vw, 1.05rem);
+  color: rgba(255,255,255,0.3);
+  font-style: italic;
+}
+
+/* ── GRID ── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 60px 36px;
   max-width: 1100px;
   margin: 0 auto;
-  padding: 0 32px;
-}
-@media(max-width:600px){ .col{ padding: 0 20px; } }
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   HEADER
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.site-header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: rgba(13,13,13,.92);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--line);
-}
-.header-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 52px;
-}
-/* ← REPLACE with your handle */
-.handle {
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: .04em;
-  color: var(--text);
-}
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 28px;
-}
-.header-link {
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  color: var(--mid);
-  transition: color .2s;
-}
-.header-link:hover { color: var(--text); }
-.header-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--accent);
-  animation: breathe 2.6s ease-in-out infinite;
-}
-@keyframes breathe {
-  0%,100%{ opacity:1; transform:scale(1); }
-  50%{ opacity:.4; transform:scale(.8); }
+  padding: 30px 30px 80px;
+  position: relative;
+  z-index: 1;
 }
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   INTRO
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.intro {
-  padding: 88px 0 80px;
-  display: grid;
-  grid-template-columns: 1fr 420px;
-  gap: 0 80px;
-  align-items: start;
-  border-bottom: 1px solid var(--line);
+@media (max-width: 900px) {
+  .grid { grid-template-columns: repeat(2, 1fr); gap: 50px 28px; }
 }
-@media(max-width:840px){
-  .intro {
+@media (max-width: 600px) {
+  .grid {
     grid-template-columns: 1fr;
-    gap: 40px;
-    padding: 60px 0 56px;
+    max-width: 360px;
+    gap: 54px;
+    padding: 20px 16px 60px;
   }
 }
 
-/* Left: name block */
-.intro-left {}
-
-.intro-eyebrow {
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: .18em;
-  text-transform: uppercase;
-  color: var(--low);
-  margin-bottom: 20px;
-}
-
-/* ← REPLACE "YourHandle" — this is the big display name */
-.intro-handle {
-  font-family: var(--ff);
-  font-weight: 900;
-  font-size: clamp(52px, 8vw, 96px);
-  line-height: .93;
-  letter-spacing: -.03em;
-  color: var(--white);
-  margin-bottom: 8px;
-}
-
-.intro-role {
-  font-family: var(--ffi);
-  font-style: italic;
-  font-weight: 400;
-  font-size: clamp(28px, 4vw, 44px);
-  line-height: 1.1;
-  letter-spacing: -.01em;
-  color: var(--mid);
-  margin-bottom: 40px;
-}
-
-/* Horizontal rule with label */
-.intro-rule {
+/* ── bottle wrapper ── */
+.bottle-wrap {
   display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 28px;
+  justify-content: center;
+  perspective: 800px;
+  opacity: 0;
+  animation: bottleIn 0.6s ease-out forwards;
 }
-.intro-rule::before {
-  content: '';
-  width: 32px; height: 1px;
-  background: var(--line2);
-  flex-shrink: 0;
-}
-.intro-rule span {
-  font-size: 9px;
-  letter-spacing: .2em;
-  text-transform: uppercase;
-  color: var(--low);
+.bottle-wrap:nth-child(1) { animation-delay: 0.1s; }
+.bottle-wrap:nth-child(2) { animation-delay: 0.15s; }
+.bottle-wrap:nth-child(3) { animation-delay: 0.2s; }
+.bottle-wrap:nth-child(4) { animation-delay: 0.25s; }
+.bottle-wrap:nth-child(5) { animation-delay: 0.3s; }
+.bottle-wrap:nth-child(6) { animation-delay: 0.35s; }
+.bottle-wrap:nth-child(7) { animation-delay: 0.4s; }
+.bottle-wrap:nth-child(8) { animation-delay: 0.45s; }
+.bottle-wrap:nth-child(9) { animation-delay: 0.5s; }
+.bottle-wrap:nth-child(10) { animation-delay: 0.55s; }
+.bottle-wrap:nth-child(11) { animation-delay: 0.6s; }
+
+@keyframes bottleIn {
+  from { opacity: 0; transform: translateY(30px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* Tags */
-.intro-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
-}
-.itag {
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  padding: 5px 12px;
-  border-radius: 3px;
-  border: 1px solid var(--line2);
-  color: var(--low);
-  transition: all .2s;
-}
-.itag.hot {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: rgba(240,224,64,.05);
-}
-
-/* Right: bio */
-.intro-right { padding-top: 8px; }
-
-.bio-text {
-  font-family: var(--ffi);
-  font-style: italic;
-  font-size: 19px;
-  line-height: 1.7;
-  color: #777;
-  margin-bottom: 20px;
-  font-weight: 400;
-}
-.bio-text strong {
-  color: var(--text);
-  font-style: normal;
-  font-family: var(--ff);
-  font-weight: 600;
-  font-size: .88em;
-}
-.bio-text .hi {
-  color: var(--accent);
-  font-style: normal;
-  font-family: var(--ff);
-  font-size: .78em;
-  font-weight: 500;
-  letter-spacing: .02em;
-}
-
-.bio-closer {
-  font-size: 14px;
-  line-height: 1.7;
-  color: var(--mid);
-  padding-top: 20px;
-  border-top: 1px solid var(--line);
-}
-.bio-closer strong { color: var(--text); font-weight: 600; }
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   GAMES
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.games-section {
-  padding: 64px 0 0;
-  border-bottom: 1px solid var(--line);
-}
-
-.section-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  margin-bottom: 32px;
-}
-.section-title {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: .18em;
-  text-transform: uppercase;
-  color: var(--mid);
-}
-.section-count {
-  font-size: 10px;
-  letter-spacing: .08em;
-  color: var(--low);
-}
-
-/* Games list — each game is a full-width row */
-.games-list {
-  display: flex;
-  flex-direction: column;
-}
-
-.game-row {
-  display: grid;
-  grid-template-columns: 72px 1fr auto;
-  align-items: start;
-  gap: 0 28px;
-  padding: 32px 0;
-  border-top: 1px solid var(--line);
-  transition: background .2s;
-  cursor: pointer;
+/* ── bottle container ── */
+.bottle {
+  --glow: #8b6cff;
+  --glow-alpha: rgba(139,108,255,0.35);
   position: relative;
+  width: 210px;
+  cursor: pointer;
+  transition: transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94), filter 0.4s ease;
 }
-/* last row bottom border */
-.game-row:last-child { border-bottom: 1px solid var(--line); }
 
-/* Accent line grows in from left on hover */
-.game-row::before {
+@media (max-width: 600px) {
+  .bottle { width: 100%; max-width: 280px; }
+}
+
+.bottle:hover {
+  transform: translateY(-10px) rotate(0deg) !important;
+  filter: drop-shadow(0 8px 25px var(--glow-alpha));
+}
+
+/* ── cap ── */
+.cap {
+  width: 56%;
+  height: 38px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 5;
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-origin: center bottom;
+}
+
+.cap-top {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 6px;
+  background: linear-gradient(180deg, #9a7530 0%, #7a5520 100%);
+  border-radius: 4px 4px 0 0;
+  z-index: 2;
+}
+
+/* push-turn arrows */
+.cap-top::before {
   content: '';
   position: absolute;
-  left: -32px; top: 0; bottom: 0;
-  width: 2px;
-  background: var(--accent);
-  transform: scaleY(0);
-  transform-origin: top;
-  transition: transform .3s var(--ease-out);
+  top: 1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 3px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 1px;
 }
-.game-row:hover::before { transform: scaleY(1); }
 
-/* Game number */
-.game-n {
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: .1em;
-  color: var(--low);
-  padding-top: 6px;
-  font-variant-numeric: tabular-nums;
-  transition: color .2s;
+.cap-body {
+  position: absolute;
+  top: 5px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, #7a5520 0%, #5a3a10 40%, #6b4818 100%);
+  border-radius: 4px 4px 0 0;
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 4px,
+      rgba(0,0,0,0.18) 4px,
+      rgba(0,0,0,0.18) 5px
+    );
+  box-shadow:
+    inset 0 2px 3px rgba(255,255,255,0.12),
+    inset 0 -2px 4px rgba(0,0,0,0.3),
+    0 -1px 3px rgba(0,0,0,0.4);
 }
-.game-row:hover .game-n { color: var(--accent); }
 
-/* Game content */
-.game-content {}
+/* glass highlight on cap */
+.cap-body::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  right: 60%;
+  bottom: 3px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+  border-radius: 3px 0 0 3px;
+}
 
-.game-title-row {
+/* cap open state */
+.bottle.opened .cap {
+  transform: rotateZ(90deg) translateY(-24px);
+  pointer-events: auto;
+}
+
+/* ── body ── */
+.body {
+  width: 100%;
+  aspect-ratio: 0.55;
+  background: linear-gradient(
+    90deg,
+    rgba(100,60,15,0.94) 0%,
+    rgba(150,95,30,0.88) 15%,
+    rgba(185,125,42,0.84) 35%,
+    rgba(200,140,50,0.82) 50%,
+    rgba(185,125,42,0.84) 65%,
+    rgba(150,95,30,0.88) 85%,
+    rgba(100,60,15,0.94) 100%
+  );
+  border-radius: 8px 8px 12px 12px;
+  position: relative;
+  box-shadow:
+    inset 3px 0 14px rgba(255,255,255,0.06),
+    inset -4px 0 14px rgba(0,0,0,0.35),
+    inset 0 -6px 18px rgba(0,0,0,0.4),
+    inset 0 4px 8px rgba(0,0,0,0.15),
+    0 12px 30px rgba(0,0,0,0.6);
   display: flex;
   align-items: center;
-  gap: 14px;
-  margin-bottom: 8px;
-  flex-wrap: wrap;
+  justify-content: center;
+  overflow: hidden;
+  backdrop-filter: blur(2px);
 }
 
-/* ← REPLACE game titles */
-.game-name {
-  font-family: var(--ff);
-  font-weight: 900;
-  font-size: clamp(24px, 3.5vw, 34px);
-  letter-spacing: -.02em;
-  line-height: 1;
-  color: var(--text);
-  transition: color .2s;
-}
-.game-row:hover .game-name { color: var(--white); }
-
-/* Status badge */
-.gbadge {
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  padding: 4px 9px;
-  border-radius: 3px;
-  border: 1px solid var(--line2);
-  color: var(--low);
-  white-space: nowrap;
-}
-.gbadge.live {
-  border-color: rgba(240,224,64,.35);
-  color: var(--accent);
-  background: rgba(240,224,64,.06);
+/* glass highlight streak */
+.body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 6%;
+  width: 16%;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.07) 0%,
+    rgba(255,255,255,0.04) 30%,
+    rgba(255,255,255,0.02) 60%,
+    transparent 80%
+  );
+  border-radius: 8px 0 0 12px;
+  z-index: 3;
+  pointer-events: none;
 }
 
-/* Platforms */
-.game-plats {
+/* liquid inside */
+.liquid {
+  position: absolute;
+  bottom: 0;
+  left: 4%;
+  right: 4%;
+  height: 65%;
+  background: linear-gradient(
+    180deg,
+    rgba(160,90,20,0.5) 0%,
+    rgba(140,75,15,0.7) 30%,
+    rgba(120,60,10,0.85) 100%
+  );
+  border-radius: 0 0 10px 10px;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* meniscus wave */
+.liquid::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: -10%;
+  right: -10%;
+  height: 16px;
+  background: rgba(160,90,20,0.5);
+  border-radius: 0 0 50% 50%;
+  animation: meniscus 3s ease-in-out infinite;
+}
+
+.bottle:hover .liquid::before {
+  animation: meniscusHover 1.2s ease-in-out infinite;
+}
+
+@keyframes meniscus {
+  0%, 100% { transform: translateY(0) scaleX(1); }
+  50% { transform: translateY(1px) scaleX(1.02); }
+}
+
+@keyframes meniscusHover {
+  0% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-2px) rotate(1deg); }
+  75% { transform: translateY(2px) rotate(-1deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+
+/* ── canvas preview area (inside bottle, visible when opened) ── */
+.preview-area {
+  position: absolute;
+  inset: 8px;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.5s ease 0.3s;
+  pointer-events: none;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.bottle.opened .preview-area {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.preview-area canvas {
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
+}
+
+/* amber tint overlay on canvas */
+.preview-area::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(160, 100, 30, 0.15);
+  border-radius: 6px;
+  pointer-events: none;
+}
+
+/* placeholder glow for projects without canvas */
+.preview-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 6px;
+  background: radial-gradient(ellipse at center, var(--glow-alpha) 0%, transparent 70%);
   display: flex;
-  gap: 5px;
-  margin-bottom: 10px;
-}
-.gp {
-  font-size: 9px;
-  font-weight: 500;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--low);
-  border: 1px solid var(--line);
-  padding: 2px 7px;
-  border-radius: 2px;
-}
-
-/* Description */
-.game-desc {
-  font-size: 13px;
-  line-height: 1.65;
-  color: var(--mid);
-  max-width: 560px;
-  font-weight: 400;
-}
-
-/* Right: play link */
-.game-action {
-  padding-top: 6px;
-  white-space: nowrap;
-}
-.play-btn {
-  display: inline-flex;
   align-items: center;
+  justify-content: center;
+  flex-direction: column;
   gap: 8px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: .1em;
+}
+
+.preview-glow .glow-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55rem;
+  color: rgba(255,255,255,0.5);
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--low);
-  border: 1px solid var(--line2);
-  padding: 10px 18px;
+}
+
+/* GitHub button inside opened bottle */
+.preview-btn {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.5rem;
+  color: #fff;
+  background: rgba(0,0,0,0.7);
+  border: 1px solid rgba(255,255,255,0.15);
+  padding: 5px 12px;
   border-radius: 4px;
-  transition: all .25s var(--ease-out);
-}
-.play-btn svg {
-  width: 10px; height: 10px;
-  transition: transform .25s var(--ease-out);
-}
-.game-row:hover .play-btn {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #000;
-}
-.game-row:hover .play-btn svg { transform: translate(2px,-2px); }
-
-@media(max-width:640px){
-  .game-row { grid-template-columns: 48px 1fr; gap: 0 16px; }
-  .game-action { display: none; }
-  .game-name { font-size: 22px; }
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  transition: background 0.2s, border-color 0.2s;
+  white-space: nowrap;
+  backdrop-filter: blur(4px);
 }
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   CONNECT
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.connect-section {
-  padding: 64px 0 0;
-  border-bottom: 1px solid var(--line);
+.preview-btn:hover {
+  background: rgba(40,40,40,0.9);
+  border-color: rgba(255,255,255,0.3);
 }
 
-.connect-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  border-top: 1px solid var(--line);
-  border-left: 1px solid var(--line);
+/* ── label ── */
+.label {
+  width: 82%;
+  background: #f8f6f0;
+  border-radius: 4px;
+  padding: 14px 12px 12px;
+  position: relative;
+  z-index: 4;
+  box-shadow:
+    0 1px 3px rgba(0,0,0,0.15),
+    inset 0 0 0 1px rgba(0,0,0,0.06);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  /* slight rotation for wear */
+  transform: rotate(0.5deg);
 }
-@media(max-width:720px){ .connect-grid{ grid-template-columns: repeat(2,1fr); } }
-@media(max-width:440px){ .connect-grid{ grid-template-columns: 1fr; } }
 
-.connect-card {
+/* label edge yellowing */
+.label::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 4px;
+  background: linear-gradient(
+    135deg,
+    rgba(180,160,100,0.06) 0%,
+    transparent 30%,
+    transparent 70%,
+    rgba(180,160,100,0.08) 100%
+  );
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* peeling corner */
+.label::after {
+  content: '';
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  width: 8px;
+  height: 8px;
+  background: linear-gradient(135deg, transparent 50%, #ece8dc 50%);
+  box-shadow: -1px 1px 2px rgba(0,0,0,0.1);
+  z-index: 11;
+}
+
+/* coffee ring stain */
+.label-stain {
+  position: absolute;
+  bottom: -8px;
+  right: -6px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    transparent 40%,
+    rgba(120,80,30,0.02) 50%,
+    rgba(120,80,30,0.03) 60%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 12;
+}
+
+/* hide label when opened */
+.bottle.opened .label {
+  opacity: 0;
+  transform: scale(0.95);
+  pointer-events: none;
+}
+
+.label .pharmacy {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55rem;
+  font-weight: 600;
+  color: #333;
+  letter-spacing: 0.06em;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.label .pharmacy .rx-symbol {
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.label .divider {
+  height: 1px;
+  background: #333;
+  margin: 6px 0;
+}
+
+.label .chem-name {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 1rem;
+  color: #111;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+
+.label .project-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  color: #666;
+  margin-top: 2px;
+}
+
+.label .description {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.55rem;
+  font-weight: 400;
+  color: #444;
+  line-height: 1.45;
+  margin-top: 8px;
+}
+
+.label .rx-info {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.48rem;
+  color: #555;
+  margin-top: 8px;
+  line-height: 1.6;
+}
+
+.label .tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.label .tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.45rem;
+  background: #e8e6e0;
+  color: #555;
+  padding: 2px 6px;
+  border-radius: 2px;
+  letter-spacing: 0.02em;
+}
+
+/* ── reflective surface ── */
+.surface {
+  position: relative;
+  width: 100%;
+  margin-top: -2px;
+}
+
+.surface-shadow {
+  width: 90%;
+  height: 10px;
+  margin: 0 auto;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0.5) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+/* bottle reflection */
+.surface-reflection {
+  width: 100%;
+  height: 60px;
+  margin-top: -4px;
+  background: linear-gradient(
+    180deg,
+    rgba(160,110,40,0.06) 0%,
+    transparent 100%
+  );
+  border-radius: 0 0 12px 12px;
+  transform: scaleY(-0.3);
+  transform-origin: top center;
+  opacity: 0.4;
+  filter: blur(1px);
+  mask-image: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, transparent 100%);
+  -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, transparent 100%);
+}
+
+/* ── hover glow colors ── */
+.bottle[data-chem="dopamine"]       { --glow: #8b6cff; --glow-alpha: rgba(139,108,255,0.35); }
+.bottle[data-chem="oxytocin"]       { --glow: #ec4899; --glow-alpha: rgba(236,72,153,0.35); }
+.bottle[data-chem="vasopressin"]    { --glow: #60a5fa; --glow-alpha: rgba(96,165,250,0.35); }
+.bottle[data-chem="serotonin"]      { --glow: #4ade80; --glow-alpha: rgba(74,222,128,0.35); }
+.bottle[data-chem="norepinephrine"] { --glow: #22d3ee; --glow-alpha: rgba(34,211,238,0.35); }
+.bottle[data-chem="endorphin"]      { --glow: #fbbf24; --glow-alpha: rgba(251,191,36,0.35); }
+.bottle[data-chem="acetylcholine"]  { --glow: #a78bfa; --glow-alpha: rgba(167,139,250,0.35); }
+.bottle[data-chem="glutamate"]      { --glow: #f97316; --glow-alpha: rgba(249,115,22,0.35); }
+.bottle[data-chem="dmt"]            { --glow: #c084fc; --glow-alpha: rgba(192,132,252,0.35); }
+.bottle[data-chem="testosterone"]   { --glow: #ef4444; --glow-alpha: rgba(239,68,68,0.35); }
+.bottle[data-chem="adrenaline"]     { --glow: #E87461; --glow-alpha: rgba(232,116,97,0.35); }
+
+/* ── SIDE EFFECTS SECTION ── */
+.side-effects {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 40px 30px;
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.side-effects-inner {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  line-height: 1.8;
+  color: rgba(255,255,255,0.25);
+  text-align: justify;
+  columns: 2;
+  column-gap: 40px;
+}
+
+@media (max-width: 600px) {
+  .side-effects-inner {
+    columns: 1;
+    font-size: 0.55rem;
+  }
+  .side-effects {
+    padding: 30px 20px 20px;
+  }
+}
+
+.side-effects-inner .se-heading {
+  font-weight: 600;
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-top: 18px;
+  margin-bottom: 4px;
+  break-after: avoid;
+}
+
+.side-effects-inner .se-heading:first-child {
+  margin-top: 0;
+}
+
+.side-effects-inner .se-body {
+  margin-bottom: 12px;
+}
+
+/* ── PHARMACY COUNTER (scheduling + socials) ── */
+.counter {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 40px 24px 20px;
+  position: relative;
+  z-index: 1;
+}
+.counter-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.15);
+  text-align: center;
+  margin-bottom: 20px;
+}
+.counter-shelf {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+
+/* Shelf item — small product box */
+.shelf-item {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: 24px 24px 20px;
-  border-right: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-  min-height: 130px;
-  transition: background .2s;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  color: inherit;
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #16161e 0%, #111118 100%);
+  border: 1px solid rgba(255,255,255,0.04);
+  box-shadow: 0 2px 0 rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.3);
+  transition: transform 0.25s cubic-bezier(.22,1,.36,1), box-shadow 0.25s, border-color 0.3s;
+  min-width: 90px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+.shelf-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  background: linear-gradient(165deg, rgba(255,255,255,0.04), transparent 40%);
+  pointer-events: none;
+}
+.shelf-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 0 rgba(0,0,0,0.3), 0 10px 24px rgba(0,0,0,0.4), 0 0 20px var(--item-glow, rgba(139,108,255,0.08));
+  border-color: rgba(255,255,255,0.08);
+}
+.shelf-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+.shelf-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  text-align: center;
+  line-height: 1.3;
+}
+.shelf-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.42rem;
+  color: rgba(255,255,255,0.15);
+  text-align: center;
+  letter-spacing: 0.05em;
+}
+
+/* Consultation window — the scheduling CTA */
+.consult {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 20px 24px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #16161e 0%, #111118 100%);
+  border: 1px solid rgba(255,255,255,0.04);
+  box-shadow: 0 2px 0 rgba(0,0,0,0.3), 0 6px 20px rgba(0,0,0,0.3);
+  text-align: center;
   position: relative;
   overflow: hidden;
 }
-.connect-card::after {
+.consult::before {
   content: '';
   position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 2px;
-  background: var(--accent);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform .35s var(--ease-out);
+  inset: 0;
+  border-radius: 12px;
+  background: linear-gradient(165deg, rgba(255,255,255,0.03), transparent 30%);
+  pointer-events: none;
 }
-.connect-card:hover { background: var(--bg1); }
-.connect-card:hover::after { transform: scaleX(1); }
-
-.cc-top {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-}
-.cc-name {
-  font-size: 16px;
+.consult-rx {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55rem;
   font-weight: 600;
-  letter-spacing: -.01em;
-  color: var(--text);
-  line-height: 1;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.2);
+  margin-bottom: 8px;
 }
-.cc-arrow {
-  font-size: 14px;
-  color: var(--lower);
-  transition: color .2s, transform .25s var(--ease-out);
+.consult-heading {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+  color: #e0e0e0;
+  margin-bottom: 4px;
 }
-.connect-card:hover .cc-arrow {
-  color: var(--accent);
-  transform: translate(3px,-3px);
+.consult-sub {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.35);
+  margin-bottom: 16px;
 }
-.cc-handle {
-  font-size: 11px;
-  letter-spacing: .04em;
-  color: var(--low);
-  margin-top: 6px;
-  display: block;
+.consult-btn {
+  display: inline-block;
+  padding: 10px 28px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(180,120,40,0.7), rgba(160,100,30,0.5));
+  border: 1px solid rgba(180,120,40,0.3);
+  color: #e0d0b0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.25s;
+  box-shadow: 0 2px 0 rgba(0,0,0,0.3), 0 0 12px rgba(180,120,40,0.1);
+}
+.consult-btn:hover {
+  background: linear-gradient(135deg, rgba(180,120,40,0.9), rgba(160,100,30,0.7));
+  box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 0 24px rgba(180,120,40,0.2);
+  transform: translateY(-2px);
+}
+.consult-wait {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.48rem;
+  color: rgba(255,255,255,0.12);
+  margin-top: 10px;
+  letter-spacing: 0.08em;
 }
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   FOOTER
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+/* ── footer ── */
 footer {
-  padding: 32px 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px;
+  text-align: center;
+  padding: 20px 20px 50px;
+  position: relative;
+  z-index: 1;
 }
-.footer-l {
-  font-size: 11px;
-  letter-spacing: .08em;
-  color: var(--low);
-}
-.footer-r {
-  font-size: 11px;
-  letter-spacing: .06em;
-  color: var(--low);
-  transition: color .2s;
-}
-.footer-r:hover { color: var(--text); }
 
+footer p {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.2);
+  letter-spacing: 0.08em;
+}
+
+/* ── mobile card style ── */
+@media (max-width: 600px) {
+  .bottle {
+    width: 100%;
+    max-width: 300px;
+  }
+  .label .chem-name {
+    font-size: 0.9rem;
+  }
+  .label .description {
+    font-size: 0.52rem;
+  }
+}
+
+/* ── header intro paragraph ── */
+.header-intro {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 300;
+  font-size: clamp(0.8rem, 1.8vw, 0.95rem);
+  color: rgba(255,255,255,0.35);
+  max-width: 600px;
+  margin: 16px auto 0;
+  line-height: 1.7;
+  text-align: center;
+}
+
+.header-stats {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.25);
+  letter-spacing: 0.1em;
+  margin-top: 14px;
+}
+
+/* ── ABOUT SECTION ── */
+.about {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 50px 30px 40px;
+  position: relative;
+  z-index: 1;
+}
+.about h2 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.2);
+  margin-bottom: 24px;
+}
+.about p {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 300;
+  font-size: clamp(0.82rem, 1.6vw, 0.92rem);
+  color: rgba(255,255,255,0.45);
+  line-height: 1.8;
+  margin-bottom: 16px;
+}
+.about .highlight {
+  color: rgba(255,255,255,0.65);
+}
+.about .aside {
+  font-style: italic;
+  color: rgba(255,255,255,0.3);
+}
+
+/* ── extra bottle animation delays ── */
+.bottle-wrap:nth-child(12) { animation-delay: 0.65s; }
+.bottle-wrap:nth-child(13) { animation-delay: 0.7s; }
 </style>
 </head>
 <body>
 
-<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     STICKY HEADER
-     ← Replace YourHandle (x2)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
-<header class="site-header">
-  <div class="col">
-    <div class="header-inner">
-      <span class="handle">Marion Moranetz</span>
-      <div class="header-right">
-        <a class="header-link" href="#games">Projects</a>
-        <a class="header-link" href="#connect">Connect</a>
-        <span class="header-dot" title="Available for collaboration"></span>
-      </div>
-    </div>
-  </div>
+<header>
+  <h1>melmarion</h1>
+  <p class="subtitle">pharmacy &mdash; behavioral compounds</p>
+  <p class="tagline">I build tools that make invisible systems visible.</p>
+  <p class="header-intro">You&rsquo;ve seen portfolios before. Probably too many this week. Most of them list the same frameworks, show the same todo apps, claim the same passion for clean code. And somewhere around the twentieth one, you stopped reading the descriptions and started just scanning for something that felt different.</p>
+  <p class="header-intro">That instinct is right. Because what you&rsquo;re actually looking for isn&rsquo;t on the resume.</p>
+  <p class="header-stats">80 repos &middot; 32 public &middot; 126K datapoints &middot; Everything rendered from first principles.</p>
 </header>
 
-<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     INTRO
-     ← Replace handle, role, bio, tags
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
-<div class="col">
-  <section class="intro">
-
-    <div class="intro-left reveal">
-      <div class="intro-eyebrow">Computational Behavioral Scientist</div>
-
-      <div class="intro-handle">Marion Moranetz</div>
-
-      <div class="intro-role">Behavioral science<br/>meets engineering.</div>
-
-      <div class="intro-rule"><span>Disciplines</span></div>
-
-      <div class="intro-tags">
-        <span class="itag hot">Persuasion Modeling</span>
-        <span class="itag hot">NLP</span>
-        <span class="itag hot">iOS Dev</span>
-        <span class="itag">Python</span>
-        <span class="itag">SwiftUI</span>
-        <span class="itag">ML Pipelines</span>
-        <span class="itag">React</span>
-        <span class="itag">Behavioral UX</span>
-      </div>
-    </div>
-
-    <div class="intro-right reveal" style="transition-delay:.12s">
-      <p class="bio-text">I build systems that predict <strong>why messages work</strong> and <strong>what to change</strong>. My flagship project, Persuasion-Max, is a 5-layer prediction engine calibrated on <span class="hi">126,288</span> human interactions.</p>
-      <p class="bio-text">80 repositories. 34 iOS apps. 39 browser games and tools. Everything grounded in <span class="hi">cognitive_appraisal</span>, <span class="hi">moral_foundations</span>, and <span class="hi">limbic_circuitry</span> — behavioral science you can run, not just read about.</p>
-
-      <p class="bio-closer">B.S. Innovation & Leadership, Minor in Rhetoric & Reason. <strong>Looking for roles where behavioral research meets engineering execution.</strong></p>
-    </div>
-
-  </section>
+<div class="grid" id="grid">
+  <!-- bottles injected by script -->
 </div>
 
-<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     GAMES
-     ← Edit each game: name, desc, link, platforms
-     ← Add a game: copy one .game-row block
-     ← Remove a game: delete a .game-row block
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
-<div class="col">
-  <section class="games-section" id="games">
+<div class="about">
+  <h2>What I actually do</h2>
 
-    <div class="section-head reveal">
-      <span class="section-title">Projects</span>
-      <span class="section-count">06 featured</span>
-    </div>
+  <p>Most developers ship features. I ship behavioral models.</p>
 
-    <div class="games-list">
+  <p>The engineering is a given &mdash; 50,000+ lines of Swift, production React, Python backends, Core Graphics rendering where every pixel is calculated, not loaded from a sprite sheet. Every developer has a tech stack. The question is what sits underneath the interface.</p>
 
-      <!-- ── PROJECT 1: Persuasion-Max ──────────────────────────── -->
-      <a class="game-row reveal" href="https://github.com/melmarion/Persuasion-Max" target="_blank" rel="noopener noreferrer" style="transition-delay:.05s">
-        <span class="game-n">01</span>
-        <div class="game-content">
-          <div class="game-title-row">
-            <span class="game-name">Persuasion-Max</span>
-            <span class="gbadge live">Open Source</span>
-          </div>
-          <div class="game-plats">
-            <span class="gp">Python</span>
-            <span class="gp">FastAPI</span>
-            <span class="gp">scikit-learn</span>
-            <span class="gp">MCP</span>
-          </div>
-          <p class="game-desc">5-layer mechanistic persuasion prediction engine. Calibrated on 126K human interactions. 17 API endpoints, 12 MCP tools, 329 tests, 302 documented parameters. Predicts WHY a message works and WHAT to change.</p>
-        </div>
-        <div class="game-action">
-          <span class="play-btn">
-            Source
-            <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5"/></svg>
-          </span>
-        </div>
-      </a>
+  <p>ReadTheRoom looks exactly like your iMessage inbox. Same bubbles. Same typing indicator. Same three dots that make your stomach tighten a little while you wait for a response. Except every person in your inbox is fictional, and every conversation is a scenario where real persuasion psychology determines whether you succeed or fail.</p>
 
-      <!-- ── PROJECT 2: TELLS ──────────────────────────── -->
-      <a class="game-row reveal" href="https://github.com/melmarion/tells-v8" target="_blank" rel="noopener noreferrer" style="transition-delay:.1s">
-        <span class="game-n">02</span>
-        <div class="game-content">
-          <div class="game-title-row">
-            <span class="game-name">TELLS</span>
-            <span class="gbadge live">Public</span>
-          </div>
-          <div class="game-plats">
-            <span class="gp">SwiftUI</span>
-            <span class="gp">iOS</span>
-          </div>
-          <p class="game-desc">Social deduction game — identify deception, power dynamics, and manipulation in WhatsApp-style chat simulations. 5 modes, 15 scenarios, skill radar tracking. 3,600+ lines of Swift.</p>
-        </div>
-        <div class="game-action">
-          <span class="play-btn">
-            Source
-            <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5"/></svg>
-          </span>
-        </div>
-      </a>
+  <p>14 characters. Each one has an attachment style, Big Five personality scores, defense mechanisms, and specific vulnerabilities. You can send the same message to the anxious-attached friend and the avoidant coworker and watch it land completely differently. You can&rsquo;t memorize a script. You have to read the person.</p>
 
-      <!-- ── PROJECT 3: SWAY ──────────────────────────── -->
-      <a class="game-row reveal" href="https://github.com/melmarion/sway-v5" target="_blank" rel="noopener noreferrer" style="transition-delay:.15s">
-        <span class="game-n">03</span>
-        <div class="game-content">
-          <div class="game-title-row">
-            <span class="game-name">SWAY</span>
-            <span class="gbadge live">Public</span>
-          </div>
-          <div class="game-plats">
-            <span class="gp">SwiftUI</span>
-            <span class="gp">iOS</span>
-          </div>
-          <p class="game-desc">Persuasion literacy game. Practice influence, negotiation, comfort, de-escalation, and charm through branching text conversations. Unlock named persuasion principles by using them correctly.</p>
-        </div>
-        <div class="game-action">
-          <span class="play-btn">
-            Source
-            <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5"/></svg>
-          </span>
-        </div>
-      </a>
+  <p>I built a scoring engine across four dimensions: read, rapport, frame, close. And then I built the last character &mdash; <span class="highlight">a therapist &mdash; and gave her a single entry where her defense mechanisms should be: &ldquo;None &mdash; she detects yours.&rdquo;</span></p>
 
-      <!-- ── PROJECT 4: Stillness ──────────────────────────── -->
-      <a class="game-row reveal" href="https://github.com/melmarion/stillness" target="_blank" rel="noopener noreferrer" style="transition-delay:.2s">
-        <span class="game-n">04</span>
-        <div class="game-content">
-          <div class="game-title-row">
-            <span class="game-name">Stillness</span>
-            <span class="gbadge live">Public</span>
-          </div>
-          <div class="game-plats">
-            <span class="gp">SwiftUI</span>
-            <span class="gp">Canvas</span>
-            <span class="gp">iOS</span>
-          </div>
-          <p class="game-desc">4-in-1 generative meditation app. Rain on glass, foggy forest, bioluminescent shore, cosmic awe pulse. Binaural audio with theta ramping, coherent breathing sync. Zero external assets — everything procedural.</p>
-        </div>
-        <div class="game-action">
-          <span class="play-btn">
-            Source
-            <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5"/></svg>
-          </span>
-        </div>
-      </a>
+  <p>Every influence technique fails on her. The anchoring that worked on character six. The loss framing that cracked character eleven. The strategic empathy that character three never saw coming. None of it works. The only thing that scores points is the one thing you can&rsquo;t manufacture.</p>
 
-      <!-- ── PROJECT 5: Beneath ──────────────────────────── -->
-      <a class="game-row reveal" href="https://github.com/melmarion/beneath" target="_blank" rel="noopener noreferrer" style="transition-delay:.25s">
-        <span class="game-n">05</span>
-        <div class="game-content">
-          <div class="game-title-row">
-            <span class="game-name">Beneath</span>
-            <span class="gbadge live">Public</span>
-          </div>
-          <div class="game-plats">
-            <span class="gp">SwiftUI</span>
-            <span class="gp">Canvas</span>
-            <span class="gp">iOS</span>
-          </div>
-          <p class="game-desc">Survival text game in a frozen wilderness. Resource management, crafting, hunting. Wolf companion with 5 trust stages that evolve based on player behavior. Procedural scenes and audio.</p>
-        </div>
-        <div class="game-action">
-          <span class="play-btn">
-            Source
-            <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5"/></svg>
-          </span>
-        </div>
-      </a>
+  <p><span class="highlight">I didn&rsquo;t design that as a philosophical statement. It emerged from the system. Forty techniques, tested against fourteen personality models, and the conclusion the math arrived at is that authenticity outperforms strategy.</span> That&rsquo;s not something I decided. The architecture proved it.</p>
 
-      <!-- ── PROJECT 6: Kitsune no Michi ──────────────────────────── -->
-      <a class="game-row reveal" href="https://github.com/melmarion/kitsune-no-michi" target="_blank" rel="noopener noreferrer" style="transition-delay:.3s">
-        <span class="game-n">06</span>
-        <div class="game-content">
-          <div class="game-title-row">
-            <span class="game-name">Kitsune no Michi</span>
-            <span class="gbadge live">Public</span>
-          </div>
-          <div class="game-plats">
-            <span class="gp">SwiftUI</span>
-            <span class="gp">Canvas</span>
-            <span class="gp">iOS</span>
-          </div>
-          <p class="game-desc">Atmospheric exploration of Japanese fox mythology. 19 locations, shrine discovery, seasonal Canvas rendering, kitsune progression, procedural ambient audio. 3,600+ lines.</p>
-        </div>
-        <div class="game-action">
-          <span class="play-btn">
-            Source
-            <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5"/></svg>
-          </span>
-        </div>
-      </a>
+  <p>When you open Forecast, you see a weather app. Cloud cover. Temperature. Atmospheric pressure. A sky that shifts from clear to overcast to stormy across the day. Only you know what it actually means. The weather is your hormones. The forecast is your cycle. And the reason it&rsquo;s disguised is a design constraint that drove every pixel: this is nobody&rsquo;s business but yours.</p>
 
-    </div>
-  </section>
+  <p>Underneath the weather metaphor there&rsquo;s a pattern engine tracking data across months &mdash; correlations your conscious mind would never catch. And a Vault for the entries you&rsquo;d never put in an app anyone could see over your shoulder.</p>
+
+  <p><span class="aside">Social Pilot is the one I didn&rsquo;t expect.</span> It started as a tool to schedule Reddit posts. Then it grew a viral scoring engine. Then a behavioral science content generator. Then an autonomous commenting system with timing enforcement and anti-detection. Then a pattern library backed by 20 peer-reviewed psychological mechanisms. Then a content predictor. Then a dating assistant. Then a cross-domain viral research engine.</p>
+
+  <p><span class="highlight">56 tools. 85 automated tests. A fine-tuned 7B LLM. It runs while I sleep.</span> It learns which comment styles work in which communities, rewrites its own content strategy every week, and &mdash; the part that still surprises me &mdash; it knows the difference between a comment that performed well because the writing was good and one that performed well because the thread went viral. It separates context from craft. Most analytics platforms built by funded teams can&rsquo;t make that distinction. This one does it automatically from a script running on my laptop.</p>
+
+  <p>You&rsquo;re probably starting to notice something about these projects.</p>
+
+  <p>They don&rsquo;t share a tech stack. They share a question: what happens when you treat human behavior as a system that can be modeled, tested, and made visible?</p>
+
+  <p>You get products that don&rsquo;t just serve users. They anticipate them.</p>
+
+  <p>And if you&rsquo;ve been building products for any length of time, you already know &mdash; that&rsquo;s the piece most teams are missing. Not another feature. Not a faster backend. A model of the person using it that&rsquo;s accurate enough to know what they need before they ask.</p>
+
+  <p>Here&rsquo;s what working with me actually looks like. Your team has a feature that&rsquo;s technically correct but users aren&rsquo;t adopting it. I look at the same screen everyone else looked at, but I see something different &mdash; the onboarding flow assumes people are rational when they&rsquo;re actually anxious. The notification timing triggers reactance instead of action. The progress bar moves linearly when your users&rsquo; motivation curve is logarithmic. I build the behavioral model underneath, and the feature starts working. Not because the code changed. Because the psychology did.</p>
+
+  <p><span class="aside">I&rsquo;m not sure that fits into a job title.</span> But I know exactly which teams need it. And I suspect you&rsquo;re reading this because yours is one of them.</p>
 </div>
 
-<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     CONNECT
-     ← Replace each href and handle text
-     ← Remove a card by deleting its .connect-card block
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
-<div class="col">
-  <section class="connect-section" id="connect">
+<div class="side-effects">
+  <div class="side-effects-inner">
+    <div class="se-heading">Side Effects</div>
+    <div class="se-body">Compulsive pattern recognition. Difficulty using apps without reverse-engineering their engagement model. Persistent urge to build behavioral systems for problems most people solve with intuition.</div>
 
-    <div class="section-head reveal">
-      <span class="section-title">Connect</span>
-      <span class="section-count">03 links</span>
-    </div>
+    <div class="se-heading">Active Ingredients</div>
+    <div class="se-body">Swift &middot; SwiftUI &middot; React &middot; TypeScript &middot; Python &middot; Core Graphics &middot; Core Haptics &middot; Claude API &middot; OpenClaw &middot; FastAPI &middot; Web Audio &middot; Canvas &middot; behavioral science that works better when you don&rsquo;t notice it</div>
 
-    <div class="connect-grid reveal">
+    <div class="se-heading">Contraindications</div>
+    <div class="se-body">Do not combine with shallow product thinking or the assumption that users are rational actors.</div>
 
-      <a class="connect-card" href="https://github.com/melmarion" target="_blank" rel="noopener noreferrer">
-        <div class="cc-top">
-          <span class="cc-name">GitHub</span>
-          <span class="cc-arrow">↗</span>
-        </div>
-        <span class="cc-handle">80 repos — iOS, React, Python</span>
-      </a>
+    <div class="se-heading">Storage</div>
+    <div class="se-body">Dark mode only. Between 0 and &infin; commits. Keep away from anyone who thinks engagement is a vanity metric.</div>
 
-      <a class="connect-card" href="https://linkedin.com/in/m-marion" target="_blank" rel="noopener noreferrer">
-        <div class="cc-top">
-          <span class="cc-name">LinkedIn</span>
-          <span class="cc-arrow">↗</span>
-        </div>
-        <span class="cc-handle">Professional profile</span>
-      </a>
-
-      <a class="connect-card" href="mailto:Marion.m.moranetz@gmail.com">
-        <div class="cc-top">
-          <span class="cc-name">Email</span>
-          <span class="cc-arrow">↗</span>
-        </div>
-        <span class="cc-handle">Marion.m.moranetz@gmail.com</span>
-      </a>
-
-    </div>
-
-  </section>
+    <div class="se-heading">Manufacturer</div>
+    <div class="se-body">melmarion laboratories &mdash; 80 formulas. All synthesized from first principles. No templates were harmed.</div>
+  </div>
 </div>
 
-<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     FOOTER
-     ← Edit year, handle, email
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
-<div class="col">
-  <footer class="reveal">
-    <span class="footer-l">© 2026 Marion Moranetz</span>
-    <a class="footer-r" href="mailto:Marion.m.moranetz@gmail.com">Marion.m.moranetz@gmail.com</a>
-  </footer>
+<!-- PHARMACY COUNTER -->
+<div class="counter">
+  <div class="counter-title">▸ Pharmacy Counter</div>
+
+  <div class="counter-shelf">
+    <a class="shelf-item" href="https://linkedin.com/in/m-marion" target="_blank" style="--item-glow:rgba(10,102,194,0.12)">
+      <div class="shelf-icon">💼</div>
+      <div class="shelf-label">LinkedIn</div>
+      <div class="shelf-sub">Professional<br>referral</div>
+    </a>
+    <a class="shelf-item" href="https://instagram.com/melmarion" target="_blank" style="--item-glow:rgba(225,48,108,0.12)">
+      <div class="shelf-icon">📸</div>
+      <div class="shelf-label">Instagram</div>
+      <div class="shelf-sub">Visual<br>catalog</div>
+    </a>
+    <a class="shelf-item" href="https://youtube.com/@melmarion" target="_blank" style="--item-glow:rgba(255,0,0,0.1)">
+      <div class="shelf-icon">🎬</div>
+      <div class="shelf-label">YouTube</div>
+      <div class="shelf-sub">Lab<br>footage</div>
+    </a>
+    <a class="shelf-item" href="https://x.com/melmarion" target="_blank" style="--item-glow:rgba(255,255,255,0.06)">
+      <div class="shelf-icon">𝕏</div>
+      <div class="shelf-label">Twitter</div>
+      <div class="shelf-sub">Daily<br>bulletin</div>
+    </a>
+    <a class="shelf-item" href="https://github.com/melmarion" target="_blank" style="--item-glow:rgba(139,108,255,0.12)">
+      <div class="shelf-icon">⚗️</div>
+      <div class="shelf-label">GitHub</div>
+      <div class="shelf-sub">80 formulas<br>in stock</div>
+    </a>
+  </div>
+
+  <div class="consult">
+    <div class="consult-rx">&#8478; Consultation Request</div>
+    <div class="consult-heading">Bring your hardest user behavior problem.</div>
+    <div class="consult-sub">If your product touches human behavior &mdash; and every product does, whether you&rsquo;ve modeled it or not &mdash; I&rsquo;m the person who builds the model. Onboarding that anticipates drop-off before it happens. Engagement loops that feel rewarding instead of manipulative. Social features where the psychology is the architecture, not an afterthought.</div>
+    <a class="consult-btn" href="https://cal.com/melmarion" target="_blank">
+      Book Appointment
+    </a>
+    <div class="consult-wait">No referral needed &middot; Average response time: &lt;1 day &middot; The first conversation is diagnostic.</div>
+  </div>
 </div>
+
+<footer>
+  <p>caution: may cause compulsive building</p>
+</footer>
 
 <script>
-const els = document.querySelectorAll('.reveal');
-const io  = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+// ═══ SOUND ENGINE ═══
+const Snd = {
+  _ctx: null,
+  _comp: null,
+  ctx() {
+    if (!this._ctx) {
+      this._ctx = new (window.AudioContext || window.webkitAudioContext)();
+      this._comp = this._ctx.createDynamicsCompressor();
+      this._comp.threshold.value = -24;
+      this._comp.knee.value = 30;
+      this._comp.ratio.value = 12;
+      this._comp.connect(this._ctx.destination);
+    }
+    if (this._ctx.state === 'suspended') this._ctx.resume();
+    return this._ctx;
+  },
+  dest() { return this._comp || this.ctx().destination; },
+
+  rattle() {
+    const ctx = this.ctx();
+    const dest = this.dest();
+    for (let i = 0; i < 4; i++) {
+      const t = ctx.currentTime + i * (0.03 + Math.random() * 0.02);
+      const dur = 0.015 + Math.random() * 0.01;
+      const buf = ctx.createBuffer(1, ctx.sampleRate * dur, ctx.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let j = 0; j < data.length; j++) data[j] = (Math.random() * 2 - 1) * 0.15;
+      const src = ctx.createBufferSource();
+      src.buffer = buf;
+      const filt = ctx.createBiquadFilter();
+      filt.type = 'bandpass';
+      filt.frequency.value = 3000 + Math.random() * 2000;
+      filt.Q.value = 2;
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0.12, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + dur);
+      src.connect(filt);
+      filt.connect(gain);
+      gain.connect(dest);
+      src.start(t);
+    }
+  },
+
+  capOpen() {
+    const ctx = this.ctx();
+    const dest = this.dest();
+    const t = ctx.currentTime;
+    // friction sweep
+    const osc = ctx.createOscillator();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(800, t);
+    osc.frequency.exponentialRampToValueAtTime(400, t + 0.15);
+    const g1 = ctx.createGain();
+    g1.gain.setValueAtTime(0.06, t);
+    g1.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
+    osc.connect(g1); g1.connect(dest);
+    osc.start(t); osc.stop(t + 0.2);
+    // click
+    const osc2 = ctx.createOscillator();
+    osc2.type = 'square';
+    osc2.frequency.value = 1800;
+    const g2 = ctx.createGain();
+    g2.gain.setValueAtTime(0.08, t + 0.14);
+    g2.gain.exponentialRampToValueAtTime(0.001, t + 0.17);
+    osc2.connect(g2); g2.connect(dest);
+    osc2.start(t + 0.14); osc2.stop(t + 0.18);
+    // hiss
+    const dur = 0.08;
+    const buf = ctx.createBuffer(1, ctx.sampleRate * dur, ctx.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * 0.04;
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    const hp = ctx.createBiquadFilter();
+    hp.type = 'highpass'; hp.frequency.value = 4000;
+    const g3 = ctx.createGain();
+    g3.gain.setValueAtTime(0.1, t + 0.16);
+    g3.gain.exponentialRampToValueAtTime(0.001, t + 0.24);
+    src.connect(hp); hp.connect(g3); g3.connect(dest);
+    src.start(t + 0.16);
+  },
+
+  capClose() {
+    const ctx = this.ctx();
+    const dest = this.dest();
+    const t = ctx.currentTime;
+    // click
+    const osc = ctx.createOscillator();
+    osc.type = 'square';
+    osc.frequency.value = 1600;
+    const g1 = ctx.createGain();
+    g1.gain.setValueAtTime(0.07, t);
+    g1.gain.exponentialRampToValueAtTime(0.001, t + 0.03);
+    osc.connect(g1); g1.connect(dest);
+    osc.start(t); osc.stop(t + 0.04);
+    // friction sweep reverse
+    const osc2 = ctx.createOscillator();
+    osc2.type = 'triangle';
+    osc2.frequency.setValueAtTime(400, t + 0.03);
+    osc2.frequency.exponentialRampToValueAtTime(800, t + 0.18);
+    const g2 = ctx.createGain();
+    g2.gain.setValueAtTime(0.05, t + 0.03);
+    g2.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
+    osc2.connect(g2); g2.connect(dest);
+    osc2.start(t + 0.03); osc2.stop(t + 0.22);
+    // snap
+    const osc3 = ctx.createOscillator();
+    osc3.type = 'sine';
+    osc3.frequency.value = 2200;
+    const g3 = ctx.createGain();
+    g3.gain.setValueAtTime(0.1, t + 0.18);
+    g3.gain.exponentialRampToValueAtTime(0.001, t + 0.21);
+    osc3.connect(g3); g3.connect(dest);
+    osc3.start(t + 0.18); osc3.stop(t + 0.22);
+  },
+
+  setDown() {
+    const ctx = this.ctx();
+    const dest = this.dest();
+    const t = ctx.currentTime;
+    // low thud
+    const osc = ctx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.value = 80;
+    const g1 = ctx.createGain();
+    g1.gain.setValueAtTime(0.12, t);
+    g1.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
+    osc.connect(g1); g1.connect(dest);
+    osc.start(t); osc.stop(t + 0.15);
+    // glass tap
+    const osc2 = ctx.createOscillator();
+    osc2.type = 'sine';
+    osc2.frequency.value = 1200;
+    const g2 = ctx.createGain();
+    g2.gain.setValueAtTime(0.04, t);
+    g2.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
+    osc2.connect(g2); g2.connect(dest);
+    osc2.start(t); osc2.stop(t + 0.06);
+  },
+
+  pour() {
+    const ctx = this.ctx();
+    const dest = this.dest();
+    for (let i = 0; i < 8; i++) {
+      const t = ctx.currentTime + i * (0.04 + Math.random() * 0.02);
+      const dur = 0.025 + Math.random() * 0.015;
+      const buf = ctx.createBuffer(1, ctx.sampleRate * dur, ctx.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let j = 0; j < data.length; j++) data[j] = (Math.random() * 2 - 1) * 0.12;
+      const src = ctx.createBufferSource();
+      src.buffer = buf;
+      const filt = ctx.createBiquadFilter();
+      filt.type = 'bandpass';
+      filt.frequency.value = 2000 + Math.random() * 3000;
+      filt.Q.value = 1.5 + Math.random();
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0.1 + Math.random() * 0.05, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + dur);
+      src.connect(filt);
+      filt.connect(gain);
+      gain.connect(dest);
+      src.start(t);
+    }
+  }
+};
+
+// ═══ PROJECT DATA ═══
+const projects = [
+  {
+    chem: 'psilocybin',
+    chemName: 'PSILOCYBIN',
+    project: 'Persuasion-Max',
+    desc: '5-layer mechanistic prediction engine. 126K interactions. 329 tests. 302 parameters. Predicts WHY a message works.',
+    rx: 'PM-2026',
+    dose: '17 endpoints / 12 MCP tools',
+    tags: ['Python', 'FastAPI', 'scikit-learn'],
+    url: 'https://github.com/melmarion/Persuasion-Max',
+    rotate: -0.8,
+    hasCanvas: false
+  },
+  {
+    chem: 'oxytocin',
+    chemName: 'OXYTOCIN',
+    project: 'Read the Room',
+    desc: 'Social bonding agent. Builds trust literacy through simulated conversation.',
+    rx: 'RTR-2024',
+    dose: '14 NPCs / 40+ techniques',
+    tags: ['SwiftUI', 'Claude AI'],
+    url: 'https://read-the-room-psi.vercel.app',
+    rotate: 1.5,
+    hasCanvas: true,
+    canvasId: 'cv0'
+  },
+  {
+    chem: 'dopamine',
+    chemName: 'DOPAMINE',
+    project: 'Signify',
+    desc: 'The reward loop. Variable ratio reinforcement disguised as language education.',
+    rx: 'SIG-2024',
+    dose: '50 signs / 10 units',
+    tags: ['SwiftUI', 'Gamification'],
+    url: 'https://sign-language-app-seven.vercel.app',
+    rotate: -2,
+    hasCanvas: true,
+    canvasId: 'cv1'
+  },
+  {
+    chem: 'vasopressin',
+    chemName: 'VASOPRESSIN',
+    project: 'Forecast',
+    desc: 'Cycle intelligence compound. Hormone data disguised as atmospheric conditions.',
+    rx: 'FRC-2024',
+    dose: 'Daily / Cycle-synced',
+    tags: ['SwiftUI', 'Health'],
+    url: 'https://github.com/melmarion/forecast-ios', // iOS only — no web deploy
+    rotate: -1,
+    hasCanvas: true,
+    canvasId: 'cv2'
+  },
+  {
+    chem: 'serotonin',
+    chemName: 'SEROTONIN',
+    project: 'Wild Hearts',
+    desc: 'Mastery stabilizer. The calm satisfaction of nurturing, building, protecting.',
+    rx: 'WH-2024',
+    dose: 'Procedural / Infinite',
+    tags: ['CoreGraphics', 'Game'],
+    url: 'https://wild-farm.vercel.app',
+    rotate: 2.5,
+    hasCanvas: true,
+    canvasId: 'cv3'
+  },
+  {
+    chem: 'norepinephrine',
+    chemName: 'NOREPINEPHRINE',
+    project: 'ClearFrame',
+    desc: 'Cognitive sharpener. Heightens critical analysis of information streams.',
+    rx: 'CF-2024',
+    dose: 'Real-time / Per article',
+    tags: ['React', 'Chrome Extension'],
+    url: 'https://github.com/melmarion/ground-news', // Chrome extension — no web deploy
+    rotate: -2.5,
+    hasCanvas: true,
+    canvasId: 'cv4'
+  },
+  {
+    chem: 'endorphin',
+    chemName: 'ENDORPHIN',
+    project: 'PostBridge MCP',
+    desc: "Builder's high. The satisfaction of infrastructure that other tools depend on.",
+    rx: 'PB-2024',
+    dose: '50 tools / On demand',
+    tags: ['Python', 'MCP', 'Claude'],
+    url: 'https://github.com/melmarion/post-bridge-mcp', // Python MCP — no web deploy
+    rotate: 1,
+    hasCanvas: true,
+    canvasId: 'cv5'
+  },
+  {
+    chem: 'acetylcholine',
+    chemName: 'ACETYLCHOLINE',
+    project: 'Synapse',
+    desc: 'Neural accelerator. Presence training through reaction speed.',
+    rx: 'SYN-2024',
+    dose: 'Dynamic difficulty',
+    tags: ['React', 'DOSE'],
+    url: 'https://synapse-nu-five.vercel.app',
+    rotate: -1.5,
+    hasCanvas: false
+  },
+  {
+    chem: 'glutamate',
+    chemName: 'GLUTAMATE',
+    project: 'CORTEX',
+    desc: 'Excitatory catalyst. 7 reasoning mechanics for sharper thinking.',
+    rx: 'CTX-2024',
+    dose: '23 concepts',
+    tags: ['React', 'Gamified'],
+    url: 'https://iq-drab.vercel.app',
+    rotate: 2,
+    hasCanvas: false
+  },
+  {
+    chem: 'dmt',
+    chemName: 'DMT',
+    project: 'Egregore',
+    desc: 'Boundary dissolver. Collective consciousness through atmospheric gameplay.',
+    rx: 'EGR-2024',
+    dose: '1 ego / session',
+    tags: ['Canvas', 'Web Audio'],
+    url: 'https://egregore-nine.vercel.app',
+    rotate: -0.5,
+    hasCanvas: false
+  },
+  {
+    chem: 'testosterone',
+    chemName: 'TESTOSTERONE',
+    project: 'Persuade Me',
+    desc: 'Assertiveness compound. Practice influence on characters who fight back.',
+    rx: 'PM-2024',
+    dose: '12 scenarios',
+    tags: ['AI', 'Claude'],
+    url: 'https://persuade-me-melindaxmarion-3009s-projects.vercel.app',
+    rotate: 1.8,
+    hasCanvas: false
+  },
+  {
+    chem: 'adrenaline',
+    chemName: 'ADRENALINE',
+    project: 'Pose Prompter',
+    desc: 'Creative catalyst. Assembles AI image prompts from 1,384 options across 32 categories.',
+    rx: 'PP-2025',
+    dose: '183 presets / ∞ combos',
+    tags: ['React', 'SwiftUI', 'Firebase'],
+    url: 'https://pose-prompter.web.app',
+    rotate: -1.2,
+    hasCanvas: false
+  },
+  {
+    chem: 'norepinephrine',
+    chemName: 'CORTISOL',
+    project: 'Social Pilot',
+    desc: 'Autonomous behavioral agent. 56 tools, fine-tuned 7B LLM, 85 tests. Generates, scores, and posts content while modeling human psychology.',
+    rx: 'SP-2026',
+    dose: '56 tools / 24-7',
+    tags: ['Python', 'Ollama', 'MCP'],
+    url: 'https://github.com/melmarion/social-pilot',
+    rotate: -1.8,
+    hasCanvas: false
+  }
+];
+
+// ═══ BUILD BOTTLES ═══
+const grid = document.getElementById('grid');
+
+projects.forEach((p, idx) => {
+  const wrap = document.createElement('div');
+  wrap.className = 'bottle-wrap';
+
+  const previewContent = p.hasCanvas
+    ? `<canvas id="${p.canvasId}"></canvas>`
+    : `<div class="preview-glow"><div class="glow-text">${p.chemName}</div></div>`;
+
+  wrap.innerHTML = `
+    <div>
+      <div class="bottle" data-chem="${p.chem}" data-idx="${idx}" style="transform: rotate(${p.rotate}deg);">
+        <div class="cap">
+          <div class="cap-top"></div>
+          <div class="cap-body"></div>
+        </div>
+        <div class="body">
+          <div class="liquid"></div>
+          <div class="preview-area">
+            ${previewContent}
+            <a href="${p.url}" target="_blank" rel="noopener" class="preview-btn" onclick="event.stopPropagation()">view on github &rarr;</a>
+          </div>
+          <div class="label">
+            <div class="label-stain"></div>
+            <div class="pharmacy"><span class="rx-symbol">&#8478;</span> melmarion pharmacy</div>
+            <div class="divider"></div>
+            <div class="chem-name">${p.chemName}</div>
+            <div class="project-name">(${p.project})</div>
+            <div class="description">${p.desc}</div>
+            <div class="rx-info">
+              Rx# ${p.rx}<br>
+              Dose: ${p.dose}<br>
+              Refills: \u221E
+            </div>
+            <div class="tags">
+              ${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="surface">
+        <div class="surface-shadow"></div>
+        <div class="surface-reflection"></div>
+      </div>
+    </div>
+  `;
+
+  grid.appendChild(wrap);
+});
+
+// ═══ CLICK HANDLER ═══
+let hoverTimers = {};
+
+document.querySelectorAll('.bottle').forEach(bottle => {
+  const idx = bottle.dataset.idx;
+
+  bottle.addEventListener('click', (e) => {
+    if (e.target.closest('.preview-btn')) return;
+
+    const isOpened = bottle.classList.contains('opened');
+    if (isOpened) {
+      bottle.classList.remove('opened');
+      Snd.capClose();
+    } else {
+      // close any other opened bottle
+      document.querySelectorAll('.bottle.opened').forEach(b => {
+        b.classList.remove('opened');
+      });
+      bottle.classList.add('opened');
+      Snd.capOpen();
+      setTimeout(() => Snd.pour(), 350);
+    }
   });
-}, { threshold: 0.08 });
-els.forEach(el => io.observe(el));
+
+  // hover sounds
+  let isHovering = false;
+  bottle.addEventListener('mouseenter', () => {
+    if (!isHovering) {
+      isHovering = true;
+      Snd.rattle();
+    }
+  });
+  bottle.addEventListener('mouseleave', () => {
+    isHovering = false;
+    Snd.setDown();
+  });
+
+  // Touch support
+  bottle.addEventListener('touchstart', (e) => {
+    // Let the click event handle it
+  }, { passive: true });
+});
+
+// ═══ CANVAS RENDERERS ═══
+function initCanvas(id) {
+  const c = document.getElementById(id);
+  if (!c) return null;
+  const x = c.getContext('2d');
+  const parent = c.parentElement;
+  const w = parent.offsetWidth || 180;
+  const h = parent.offsetHeight || 300;
+  c.width = w * 2;
+  c.height = h * 2;
+  c.style.width = w + 'px';
+  c.style.height = h + 'px';
+  return { c, x, W: c.width, H: c.height };
+}
+
+// Wait a tick for layout
+requestAnimationFrame(() => {
+
+// 0: Read the Room — iMessage
+(() => { const r = initCanvas('cv0'); if (!r) return; const { x, W, H } = r; let f = 0;
+const msgs = [{ t: "Hey, can I ask you something?", s: 'l' }, { t: "Sure, what's up?", s: 'r' }, { t: "Do people say what they mean?", s: 'l' }, { t: "Rarely. That's the game.", s: 'r' }, { t: "How do you read them?", s: 'l' }, { t: "You learn the patterns.", s: 'r' }];
+function draw() { x.fillStyle = '#0d0d1a'; x.fillRect(0, 0, W, H); const t = f * 0.016; const show = Math.min(Math.floor(t * 0.5), msgs.length);
+for (let i = 0; i < show; i++) { const m = msgs[i], y = 16 + i * 30, tw = Math.min(m.t.length * 6 + 20, W * 0.72), bx = m.s === 'r' ? W - tw - 14 : 14, age = Math.min((t - i * 2) * 1.5, 1), sc = Math.min(.85 + age * .3, 1);
+x.save(); x.globalAlpha = age; x.translate(bx + tw / 2, y + 11); x.scale(sc, sc); x.translate(-(bx + tw / 2), -(y + 11));
+x.fillStyle = m.s === 'r' ? '#7755ff' : '#1c1c2e'; x.beginPath(); x.roundRect(bx, y, tw, 22, 11); x.fill();
+if (m.s === 'r') { x.strokeStyle = 'rgba(119,85,255,0.2)'; x.lineWidth = .5; x.stroke() }
+x.fillStyle = m.s === 'r' ? 'rgba(255,255,255,.9)' : 'rgba(255,255,255,.65)'; x.font = '500 9px Outfit'; x.fillText(m.t, bx + 10, y + 14); x.restore() }
+if (show < msgs.length) { const ty = 16 + show * 30; x.globalAlpha = .5 + Math.sin(t * 4) * .3; x.fillStyle = '#1c1c2e'; x.beginPath(); x.roundRect(14, ty, 38, 22, 11); x.fill();
+for (let d = 0; d < 3; d++) { x.fillStyle = 'rgba(255,255,255,.3)'; x.beginPath(); x.arc(26 + d * 8, ty + 11, 2 + Math.sin(t * 5 + d) * .8, 0, Math.PI * 2); x.fill() } x.globalAlpha = 1 }
+f++; requestAnimationFrame(draw) } draw() })();
+
+// 1: Signify — skill tree
+(() => { const r = initCanvas('cv1'); if (!r) return; const { x, W, H } = r; let f = 0;
+const nodes = [{ x: .5, y: .12, d: 1 }, { x: .35, y: .28, d: 1 }, { x: .65, y: .44, d: 1 }, { x: .45, y: .6, d: 0, cur: 1 }, { x: .55, y: .76, d: 0 }, { x: .4, y: .92, d: 0 }];
+function draw() { x.fillStyle = '#0a0a18'; x.fillRect(0, 0, W, H); const t = f * .01;
+const g = x.createRadialGradient(W * .3, H * .2, 0, W * .3, H * .2, W * .4); g.addColorStop(0, 'rgba(119,85,255,.04)'); g.addColorStop(1, 'transparent'); x.fillStyle = g; x.fillRect(0, 0, W, H);
+x.strokeStyle = 'rgba(255,255,255,.04)'; x.lineWidth = 1.5; x.setLineDash([4, 4]);
+for (let i = 0; i < nodes.length - 1; i++) { x.beginPath(); x.moveTo(nodes[i].x * W, nodes[i].y * H); x.lineTo(nodes[i + 1].x * W, nodes[i + 1].y * H); x.stroke() } x.setLineDash([]);
+nodes.forEach(n => { const nx = n.x * W, ny = n.y * H, R = 14;
+if (n.d) { const ng = x.createLinearGradient(nx - R, ny - R, nx + R, ny + R); ng.addColorStop(0, '#fbbf24'); ng.addColorStop(1, '#f59e0b'); x.fillStyle = ng; x.beginPath(); x.arc(nx, ny, R, 0, Math.PI * 2); x.fill(); x.fillStyle = '#fff'; x.font = 'bold 10px Outfit'; x.textAlign = 'center'; x.fillText('\u2605', nx, ny + 4) }
+else if (n.cur) { const p = 1 + Math.sin(t * 3) * .06; x.save(); x.translate(nx, ny); x.scale(p, p); x.strokeStyle = 'rgba(217,70,239,.12)'; x.lineWidth = 1.5; x.beginPath(); x.arc(0, 0, R + 8, 0, Math.PI * 2); x.stroke();
+const cg = x.createLinearGradient(-R, -R, R, R); cg.addColorStop(0, '#d946ef'); cg.addColorStop(1, '#a21caf'); x.fillStyle = cg; x.beginPath(); x.arc(0, 0, R, 0, Math.PI * 2); x.fill();
+x.fillStyle = 'rgba(255,255,255,.15)'; x.beginPath(); x.arc(0, -3, R * .65, Math.PI, 0); x.fill();
+x.fillStyle = '#fff'; x.font = 'bold 9px Outfit'; x.fillText('H', 0, 3); x.restore() }
+else { x.fillStyle = '#2a2a3a'; x.beginPath(); x.arc(nx, ny, R, 0, Math.PI * 2); x.fill(); x.fillStyle = 'rgba(255,255,255,.12)'; x.font = '9px Outfit'; x.fillText('\uD83D\uDD12', nx, ny + 3) } });
+x.textAlign = 'start'; f++; requestAnimationFrame(draw) } draw() })();
+
+// 2: Forecast — weather sky
+(() => { const r = initCanvas('cv2'); if (!r) return; const { x, W, H } = r; let f = 0;
+function draw() { const t = f * .005; const h = 215 + Math.sin(t) * 12; const s = x.createLinearGradient(0, 0, 0, H);
+s.addColorStop(0, `hsl(${h},55%,8%)`); s.addColorStop(.5, `hsl(${h + 8},45%,14%)`); s.addColorStop(1, `hsl(${h + 20},35%,6%)`); x.fillStyle = s; x.fillRect(0, 0, W, H);
+for (let i = 0; i < 25; i++) { x.fillStyle = `rgba(255,255,255,${.12 + Math.sin(t * 3 + i * 2) * .1})`; x.fillRect((i * 97) % W, (i * 53) % (H * .5), 1.2, 1.2) }
+const my = H * .3 + Math.sin(t * .4) * 10; const mg = x.createRadialGradient(W * .65, my, 3, W * .65, my, 45); mg.addColorStop(0, 'rgba(180,200,240,.4)'); mg.addColorStop(.4, 'rgba(150,180,220,.1)'); mg.addColorStop(1, 'transparent'); x.fillStyle = mg; x.fillRect(0, 0, W, H);
+x.fillStyle = 'rgba(210,225,245,.6)'; x.beginPath(); x.arc(W * .65, my, 12, 0, Math.PI * 2); x.fill();
+for (let i = 0; i < 4; i++) { const cx = ((i * 150 + t * 20) % (W + 150)) - 75, cy = 40 + i * 35 + Math.sin(t + i) * 8; x.fillStyle = `rgba(255,255,255,${.02 + i * .004})`; x.beginPath(); x.ellipse(cx, cy, 50 + i * 8, 10 + i * 2, 0, 0, Math.PI * 2); x.fill() }
+x.fillStyle = 'rgba(14,14,26,.45)'; x.beginPath(); x.roundRect(W / 2 - 70, H - 65, 140, 50, 12); x.fill();
+x.fillStyle = 'rgba(96,165,250,.8)'; x.font = 'bold 22px Outfit'; x.textAlign = 'center'; x.fillText('72\u00B0', W / 2, H - 32);
+x.fillStyle = 'rgba(255,255,255,.35)'; x.font = '500 8px Outfit'; x.fillText('Partly Clear', W / 2, H - 20); x.textAlign = 'start';
+f++; requestAnimationFrame(draw) } draw() })();
+
+// 3: Wild Hearts — farm
+(() => { const r = initCanvas('cv3'); if (!r) return; const { x, W, H } = r; let f = 0;
+const ani = Array.from({ length: 5 }, (_, i) => ({ x: 60 + i * 70, y: H * .6 + Math.random() * 40, vx: (Math.random() - .5) * .5, sz: 7 + Math.random() * 4, hue: [120, 35, 210, 50, 340][i] }));
+function draw() { const t = f * .007; const sk = x.createLinearGradient(0, 0, 0, H * .5); sk.addColorStop(0, '#0a1520'); sk.addColorStop(1, '#0a2810'); x.fillStyle = sk; x.fillRect(0, 0, W, H);
+const gr = x.createLinearGradient(0, H * .45, 0, H); gr.addColorStop(0, '#0e3018'); gr.addColorStop(1, '#081a0c'); x.fillStyle = gr; x.fillRect(0, H * .45, W, H * .55);
+for (let i = 0; i < 6; i++) { const tx = 30 + i * 65, ty = H * .42; x.fillStyle = '#3d2b1a'; x.fillRect(tx - 2, ty, 4, 22); const cg = x.createRadialGradient(tx, ty - 4, 0, tx, ty - 4, 18); cg.addColorStop(0, 'rgba(34,120,50,.5)'); cg.addColorStop(1, 'rgba(20,80,30,.15)'); x.fillStyle = cg; x.beginPath(); x.arc(tx, ty - 4, 16 + Math.sin(t + i) * 2, 0, Math.PI * 2); x.fill() }
+for (let i = 0; i < 50; i++) { const gx = (i * 11) % W, gy = H * .48 + (i * 9) % (H * .38), sw = Math.sin(t * 2 + i * .3) * 2.5; x.strokeStyle = `rgba(74,222,128,${.1 + Math.random() * .05})`; x.lineWidth = .7; x.beginPath(); x.moveTo(gx, gy); x.quadraticCurveTo(gx + sw, gy - 10, gx + sw * 1.3, gy - 18); x.stroke() }
+ani.forEach(a => { a.x += a.vx; if (a.x < 20 || a.x > W - 20) a.vx *= -1; const b = Math.sin(t * 3 + a.x * .01) * 2; x.fillStyle = `hsl(${a.hue},55%,50%)`; x.beginPath(); x.ellipse(a.x, a.y + b, a.sz, a.sz * .65, 0, 0, Math.PI * 2); x.fill(); x.fillStyle = '#fff'; x.beginPath(); x.arc(a.x - 1.5, a.y + b - 1.5, 1, 0, Math.PI * 2); x.arc(a.x + 1.5, a.y + b - 1.5, 1, 0, Math.PI * 2); x.fill() });
+f++; requestAnimationFrame(draw) } draw() })();
+
+// 4: ClearFrame — bias split
+(() => { const r = initCanvas('cv4'); if (!r) return; const { x, W, H } = r; let f = 0;
+function draw() { const t = f * .009; x.fillStyle = '#0a0e18'; x.fillRect(0, 0, W / 2, H); x.fillStyle = '#180a0e'; x.fillRect(W / 2, 0, W / 2, H);
+x.strokeStyle = 'rgba(34,211,238,.2)'; x.lineWidth = .8; x.setLineDash([4, 4]); x.beginPath(); x.moveTo(W / 2, 0); x.lineTo(W / 2, H); x.stroke(); x.setLineDash([]);
+for (let i = 0; i < 8; i++) { const y = 20 + i * 22 + Math.sin(t + i) * 2, lw = 50 + (i * 37) % 80, a = .06 + Math.sin(t * 1.5 + i * .7) * .03;
+x.fillStyle = `rgba(96,165,250,${a})`; x.beginPath(); x.roundRect(14, y, lw, 6, 2); x.fill();
+x.fillStyle = `rgba(251,113,133,${a})`; x.beginPath(); x.roundRect(W / 2 + 14, y, lw * .85, 6, 2); x.fill() }
+const sy = (t * 30) % H; x.fillStyle = 'rgba(34,211,238,.03)'; x.fillRect(0, sy - 6, W, 12);
+x.fillStyle = 'rgba(14,14,26,.5)'; x.beginPath(); x.roundRect(W / 2 - 50, H - 38, 100, 24, 8); x.fill();
+const bias = Math.sin(t * .5) * .3; x.fillStyle = 'rgba(34,211,238,.2)'; x.beginPath(); x.roundRect(W / 2 - 38, H - 32, 76, 12, 4); x.fill();
+x.fillStyle = '#22d3ee'; x.beginPath(); x.arc(W / 2 + bias * 38, H - 26, 4, 0, Math.PI * 2); x.fill();
+f++; requestAnimationFrame(draw) } draw() })();
+
+// 5: PostBridge — network
+(() => { const r = initCanvas('cv5'); if (!r) return; const { x, W, H } = r; let f = 0;
+const nodes = Array.from({ length: 10 }, () => ({ x: 40 + Math.random() * (W - 80), y: 30 + Math.random() * (H - 60), vx: (Math.random() - .5) * .35, vy: (Math.random() - .5) * .35, r: 3 + Math.random() * 3 }));
+function draw() { const t = f * .007; x.fillStyle = '#06060e'; x.fillRect(0, 0, W, H);
+nodes.forEach(n => { n.x += n.vx; n.y += n.vy; if (n.x < 20 || n.x > W - 20) n.vx *= -1; if (n.y < 20 || n.y > H - 20) n.vy *= -1 });
+for (let i = 0; i < nodes.length; i++) { for (let j = i + 1; j < nodes.length; j++) { const dx = nodes[j].x - nodes[i].x, dy = nodes[j].y - nodes[i].y, d = Math.sqrt(dx * dx + dy * dy);
+if (d < 120) { x.strokeStyle = `rgba(251,113,133,${(1 - d / 120) * .1})`; x.lineWidth = .5; x.beginPath(); x.moveTo(nodes[i].x, nodes[i].y); x.lineTo(nodes[j].x, nodes[j].y); x.stroke();
+if (Math.sin(t * 3 + i + j) > .65) { const p = Math.sin(t * 2 + i) * .5 + .5; x.fillStyle = 'rgba(251,113,133,.4)'; x.beginPath(); x.arc(nodes[i].x + dx * p, nodes[i].y + dy * p, 1.5, 0, Math.PI * 2); x.fill() } } } }
+nodes.forEach(n => { x.fillStyle = 'rgba(251,113,133,.45)'; x.beginPath(); x.arc(n.x, n.y, n.r, 0, Math.PI * 2); x.fill() });
+x.fillStyle = 'rgba(251,113,133,.06)'; x.beginPath(); x.arc(W / 2, H / 2, 30, 0, Math.PI * 2); x.fill();
+x.fillStyle = 'rgba(255,255,255,.3)'; x.font = 'bold 7px JetBrains Mono'; x.textAlign = 'center'; x.fillText('MCP', W / 2, H / 2 + 3); x.textAlign = 'start';
+f++; requestAnimationFrame(draw) } draw() })();
+
+}); // end requestAnimationFrame for layout
 </script>
+
 </body>
 </html>
