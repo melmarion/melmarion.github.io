@@ -1,14 +1,14 @@
 # melmarion.github.io
 
-Portfolio site for Marion Moranetz: behavior scientist, native iOS builder, and interaction-systems designer.
+Portfolio site for Marion Moranetz: behavioral scientist who codes persuasion systems, influence tools, and native iOS interaction surfaces.
 
 ## Purpose
 
-This repository is the public landing surface for selected work across:
+This repository is the landing surface for selected work across:
 
-- behavioral modeling
-- iOS-native product design
-- procedural and systems-driven interfaces
+- persuasion and influence modeling
+- behavioral mechanism design
+- native iOS product systems
 - decision-support and training tools
 
 ## Files
@@ -28,4 +28,3 @@ This repo is intentionally lightweight:
 - no build step
 - no framework dependency chain
 - static HTML, CSS, and JavaScript only
-
