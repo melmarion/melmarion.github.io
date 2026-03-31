@@ -1,0 +1,32 @@
+name: Static Site Check
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Verify static pages
+        run: |
+          test -f README.md
+          test -f LICENSE
+          test -f .gitignore
+          test -f index.html
+          python3 - <<'PY'
+          from pathlib import Path
+          pages = [Path("index.html"), Path("privacy-policy.html"), Path("persuasion-max.html")]
+          for path in pages:
+              text = path.read_text()
+              assert "<title>" in text, f"{path} is missing a title tag"
+              assert "<meta name=\"viewport\"" in text, f"{path} is missing viewport metadata"
+          print("Portfolio pages passed baseline checks.")
+          PY
