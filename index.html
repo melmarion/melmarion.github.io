@@ -1310,53 +1310,109 @@ const projects = [
 // ═══ BUILD BOTTLES ═══
 const grid = document.getElementById('grid');
 
-projects.forEach((p, idx) => {
+function appendChildren(parent, children) {
+  children.forEach((child) => parent.appendChild(child));
+  return parent;
+}
+
+function createElement(tagName, className, textContent) {
+  const element = document.createElement(tagName);
+  if (className) element.className = className;
+  if (textContent !== undefined) element.textContent = textContent;
+  return element;
+}
+
+function buildPreviewArea(project) {
+  const previewArea = createElement('div', 'preview-area');
+  if (project.hasCanvas) {
+    const canvas = document.createElement('canvas');
+    canvas.id = project.canvasId;
+    previewArea.appendChild(canvas);
+  } else {
+    const previewGlow = createElement('div', 'preview-glow');
+    previewGlow.appendChild(createElement('div', 'glow-text', project.chemName));
+    previewArea.appendChild(previewGlow);
+  }
+
+  const previewLink = createElement('a', 'preview-btn', 'view on github →');
+  previewLink.href = project.url;
+  previewLink.target = '_blank';
+  previewLink.rel = 'noopener';
+  previewLink.addEventListener('click', (event) => event.stopPropagation());
+  previewArea.appendChild(previewLink);
+
+  return previewArea;
+}
+
+function buildTagList(tags) {
+  const tagList = createElement('div', 'tags');
+  tags.forEach((tag) => tagList.appendChild(createElement('span', 'tag', tag)));
+  return tagList;
+}
+
+function buildBottle(project, idx) {
   const wrap = document.createElement('div');
   wrap.className = 'bottle-wrap';
+  const container = document.createElement('div');
 
-  const previewContent = p.hasCanvas
-    ? `<canvas id="${p.canvasId}"></canvas>`
-    : `<div class="preview-glow"><div class="glow-text">${p.chemName}</div></div>`;
+  const bottle = createElement('div', 'bottle');
+  bottle.dataset.chem = project.chem;
+  bottle.dataset.idx = idx;
+  bottle.style.transform = `rotate(${project.rotate}deg)`;
 
-  wrap.innerHTML = `
-    <div>
-      <div class="bottle" data-chem="${p.chem}" data-idx="${idx}" style="transform: rotate(${p.rotate}deg);">
-        <div class="cap">
-          <div class="cap-top"></div>
-          <div class="cap-body"></div>
-        </div>
-        <div class="body">
-          <div class="liquid"></div>
-          <div class="preview-area">
-            ${previewContent}
-            <a href="${p.url}" target="_blank" rel="noopener" class="preview-btn" onclick="event.stopPropagation()">view on github &rarr;</a>
-          </div>
-          <div class="label">
-            <div class="label-stain"></div>
-            <div class="pharmacy"><span class="rx-symbol">&#8478;</span> melmarion pharmacy</div>
-            <div class="divider"></div>
-            <div class="chem-name">${p.chemName}</div>
-            <div class="project-name">(${p.project})</div>
-            <div class="description">${p.desc}</div>
-            <div class="rx-info">
-              Rx# ${p.rx}<br>
-              Dose: ${p.dose}<br>
-              Refills: \u221E
-            </div>
-            <div class="tags">
-              ${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="surface">
-        <div class="surface-shadow"></div>
-        <div class="surface-reflection"></div>
-      </div>
-    </div>
-  `;
+  const cap = createElement('div', 'cap');
+  appendChildren(cap, [
+    createElement('div', 'cap-top'),
+    createElement('div', 'cap-body')
+  ]);
 
-  grid.appendChild(wrap);
+  const body = createElement('div', 'body');
+  body.appendChild(createElement('div', 'liquid'));
+  body.appendChild(buildPreviewArea(project));
+
+  const label = createElement('div', 'label');
+  const pharmacy = createElement('div', 'pharmacy');
+  const rxSymbol = createElement('span', 'rx-symbol');
+  rxSymbol.innerHTML = '&#8478;';
+  pharmacy.appendChild(rxSymbol);
+  pharmacy.append(` melmarion pharmacy`);
+
+  const rxInfo = createElement('div', 'rx-info');
+  appendChildren(rxInfo, [
+    document.createTextNode(`Rx# ${project.rx}`),
+    document.createElement('br'),
+    document.createTextNode(`Dose: ${project.dose}`),
+    document.createElement('br'),
+    document.createTextNode('Refills: ∞')
+  ]);
+
+  appendChildren(label, [
+    createElement('div', 'label-stain'),
+    pharmacy,
+    createElement('div', 'divider'),
+    createElement('div', 'chem-name', project.chemName),
+    createElement('div', 'project-name', `(${project.project})`),
+    createElement('div', 'description', project.desc),
+    rxInfo,
+    buildTagList(project.tags)
+  ]);
+
+  body.appendChild(label);
+  appendChildren(bottle, [cap, body]);
+
+  const surface = createElement('div', 'surface');
+  appendChildren(surface, [
+    createElement('div', 'surface-shadow'),
+    createElement('div', 'surface-reflection')
+  ]);
+
+  appendChildren(container, [bottle, surface]);
+  wrap.appendChild(container);
+  return wrap;
+}
+
+projects.forEach((project, idx) => {
+  grid.appendChild(buildBottle(project, idx));
 });
 
 // ═══ SPRING PHYSICS ENGINE ═══
