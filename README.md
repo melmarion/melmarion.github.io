@@ -1,30 +1,31 @@
 # melmarion.github.io
 
-Portfolio site for Marion Moranetz: behavioral scientist who codes persuasion systems, influence tools, and native iOS interaction surfaces.
+Portfolio site for Marion Moranetz: behavioral scientist, persuasion-systems builder, and native iOS product designer.
 
-## Purpose
+This repo is the public front door for the surrounding body of work. Its job is not to be technically impressive. Its job is to make the right projects legible fast.
 
-This repository is the landing surface for selected work across:
+## What The Site Needs To Do
 
-- persuasion and influence modeling
-- behavioral mechanism design
-- native iOS product systems
-- decision-support and training tools
+- establish the thesis quickly
+- show selected work without overwhelming the reader
+- connect behavioral systems thinking to product implementation
+- give people a clean path into flagship projects like Persuasion-Max and Social Pilot
 
-## Files
+## Repo Contents
 
-- `index.html` - primary portfolio entrypoint
-- `persuasion-max.html` - supporting product page
-- `privacy-policy.html` - privacy policy page
+- `index.html`
+  main portfolio surface
+- `persuasion-max.html`
+  supporting product/project page
+- `privacy-policy.html`
+  privacy-policy page
 
-## Local Preview
+## Stack
 
-Open `index.html` directly in a browser, or serve the directory with any static file server.
-
-## Maintenance Standard
-
-This repo is intentionally lightweight:
-
-- no build step
+- static HTML, CSS, and JavaScript
 - no framework dependency chain
-- static HTML, CSS, and JavaScript only
+- no build step
+
+## Use
+
+Open `index.html` directly in a browser or serve the directory through any static host.
