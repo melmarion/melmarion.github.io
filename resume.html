@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marion Moranetz | Resume</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #0a0a0f;
+  color: #e0e0e0;
+  font-family: 'Outfit', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: -120px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 350px;
+  background: radial-gradient(ellipse at center, rgba(255,255,255,0.06) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 60px 30px 80px;
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 600px) {
+  .container { padding: 40px 16px 60px; }
+}
+
+/* Header */
+header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+header h1 {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  letter-spacing: 0.06em;
+  text-transform: lowercase;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+header .subtitle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  margin-bottom: 10px;
+}
+
+header .tagline {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 300;
+  font-size: 0.95rem;
+  color: rgba(255,255,255,0.25);
+  font-style: italic;
+}
+
+.back-link {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  color: rgba(255,255,255,0.25);
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  margin-bottom: 30px;
+  transition: color 0.2s;
+}
+.back-link:hover { color: rgba(255,255,255,0.5); }
+
+/* Prescription label styling for sections */
+.rx-section {
+  background: #f8f6f0;
+  border-radius: 6px;
+  padding: 28px 24px;
+  margin-bottom: 24px;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2), inset 0 0 0 1px rgba(0,0,0,0.06);
+  color: #333;
+  transform: rotate(-0.3deg);
+}
+
+.rx-section:nth-child(even) { transform: rotate(0.2deg); }
+
+/* peeling corner */
+.rx-section::after {
+  content: '';
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  width: 10px;
+  height: 10px;
+  background: linear-gradient(135deg, transparent 50%, #ece8dc 50%);
+  box-shadow: -1px 1px 2px rgba(0,0,0,0.1);
+}
+
+/* edge yellowing */
+.rx-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 6px;
+  background: linear-gradient(135deg, rgba(180,160,100,0.06) 0%, transparent 30%, transparent 70%, rgba(180,160,100,0.08) 100%);
+  pointer-events: none;
+}
+
+.rx-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: #333;
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+}
+
+.rx-header .rx-symbol { font-size: 0.8rem; }
+
+.rx-divider {
+  height: 1px;
+  background: #333;
+  margin: 8px 0 14px;
+}
+
+.rx-title {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 1.1rem;
+  color: #111;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+
+.rx-subtitle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55rem;
+  color: #888;
+  letter-spacing: 0.04em;
+  margin-bottom: 12px;
+}
+
+.rx-body {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  color: #444;
+  line-height: 1.65;
+}
+
+.rx-body p { margin-bottom: 10px; }
+.rx-body p:last-child { margin-bottom: 0; }
+
+.rx-body strong { color: #222; font-weight: 600; }
+
+.rx-body .highlight {
+  background: rgba(180,160,100,0.12);
+  padding: 1px 4px;
+  border-radius: 2px;
+}
+
+.rx-info {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.5rem;
+  color: #777;
+  margin-top: 14px;
+  line-height: 1.7;
+}
+
+.rx-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 10px;
+}
+
+.rx-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.48rem;
+  background: #e8e6e0;
+  color: #555;
+  padding: 2px 7px;
+  border-radius: 2px;
+  letter-spacing: 0.02em;
+}
+
+/* Domain gap table */
+.gap-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.7rem;
+}
+
+.gap-table th {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.5rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #666;
+  text-align: left;
+  padding: 6px 8px;
+  border-bottom: 1px solid #ccc;
+}
+
+.gap-table td {
+  padding: 6px 8px;
+  border-bottom: 1px solid #e8e6e0;
+  color: #444;
+  vertical-align: top;
+}
+
+.gap-table td:first-child { font-weight: 600; color: #222; }
+
+/* Project list */
+.project-list {
+  list-style: none;
+  margin: 8px 0;
+}
+
+.project-list li {
+  padding: 6px 0;
+  border-bottom: 1px solid #e8e6e0;
+  font-size: 0.72rem;
+  color: #444;
+}
+
+.project-list li:last-child { border-bottom: none; }
+
+.project-list .pname {
+  font-weight: 600;
+  color: #222;
+}
+
+.project-list .pdesc {
+  color: #666;
+  font-size: 0.65rem;
+}
+
+/* Dark section (between labels) */
+.dark-section {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  line-height: 1.8;
+  color: rgba(255,255,255,0.2);
+  text-align: center;
+  padding: 20px;
+  letter-spacing: 0.08em;
+}
+
+/* Counter section for contact */
+.counter {
+  max-width: 420px;
+  margin: 40px auto 0;
+  padding: 24px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #16161e 0%, #111118 100%);
+  border: 1px solid rgba(255,255,255,0.04);
+  box-shadow: 0 2px 0 rgba(0,0,0,0.3), 0 6px 20px rgba(0,0,0,0.3);
+  text-align: center;
+}
+.counter::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  background: linear-gradient(165deg, rgba(255,255,255,0.03), transparent 30%);
+  pointer-events: none;
+}
+.counter-rx {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.2);
+  margin-bottom: 8px;
+}
+.counter-heading {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 1.1rem;
+  color: #e0e0e0;
+  margin-bottom: 4px;
+}
+.counter-sub {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.35);
+  margin-bottom: 16px;
+}
+.counter-btn {
+  display: inline-block;
+  padding: 10px 28px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(180,120,40,0.7), rgba(160,100,30,0.5));
+  border: 1px solid rgba(180,120,40,0.3);
+  color: #e0d0b0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+.counter-btn:hover {
+  background: linear-gradient(135deg, rgba(180,120,40,0.9), rgba(160,100,30,0.7));
+  transform: translateY(-2px);
+}
+
+footer {
+  text-align: center;
+  padding: 30px 20px 50px;
+}
+footer p {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55rem;
+  color: rgba(255,255,255,0.15);
+  letter-spacing: 0.08em;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<a href="index.html" class="back-link">&larr; back to pharmacy</a>
+
+<header>
+  <h1>marion moranetz</h1>
+  <p class="subtitle">clinical history &mdash; behavioral compounds</p>
+  <p class="tagline">Behavioral scientist who codes. Category of one.</p>
+</header>
+
+<!-- ═══ THE GAP ═══ -->
+<div class="rx-section">
+  <div class="rx-header"><span class="rx-symbol">&#8478;</span> melmarion pharmacy &mdash; patient history</div>
+  <div class="rx-divider"></div>
+  <div class="rx-title">The Three-Domain Problem</div>
+  <div class="rx-subtitle">Why this candidate exists in a category of one</div>
+  <div class="rx-body">
+    <table class="gap-table">
+      <tr><th>Domain</th><th>What they build</th><th>What they miss</th></tr>
+      <tr><td>Engineers</td><td>Features, systems, APIs</td><td>Why users adopt, avoid, or abandon</td></tr>
+      <tr><td>Designers</td><td>Interfaces, flows, prototypes</td><td>The psychological mechanism underneath</td></tr>
+      <tr><td>Behavioral Scientists</td><td>Research, papers, frameworks</td><td>Production code that ships</td></tr>
+    </table>
+    <p><strong>The gap:</strong> Engineers ship features without understanding the psychology. Designers polish surfaces without measuring the mechanism. Behavioral scientists publish papers without writing a line of production code.</p>
+    <p><span class="highlight">I sit in the intersection of all three. I design the behavioral system, build the native product, and ship it.</span></p>
+  </div>
+</div>
+
+<!-- ═══ WHAT I ACTUALLY DO ═══ -->
+<div class="rx-section">
+  <div class="rx-header"><span class="rx-symbol">&#8478;</span> active compound</div>
+  <div class="rx-divider"></div>
+  <div class="rx-title">Behavioral Product Engineering</div>
+  <div class="rx-subtitle">Mechanism of action</div>
+  <div class="rx-body">
+    <p>I build products where the psychology is part of the architecture &mdash; not a layer of polish applied after the feature works, but the reason the feature works at all.</p>
+    <p>When a team says "the feature works, but users don't adopt it," I find the same underlying failure: <strong>the model of the user is too shallow.</strong> The interface assumes rational behavior where the real driver is anxiety, ambiguity, status, avoidance, reward anticipation, or social risk.</p>
+    <p>I diagnose that layer and rebuild it directly into the product. Native iOS apps. Procedural canvas rendering. Web platforms. Engagement systems. Whatever the idea requires.</p>
+  </div>
+  <div class="rx-info">
+    Dose: Full-stack &middot; Route: Native iOS, React, Canvas, Python, Claude API<br>
+    Onset: Immediate &middot; Duration: Ships in days, not quarters
+  </div>
+</div>
+
+<!-- ═══ EVIDENCE ═══ -->
+<div class="rx-section">
+  <div class="rx-header"><span class="rx-symbol">&#8478;</span> clinical evidence &mdash; 50 formulations</div>
+  <div class="rx-divider"></div>
+  <div class="rx-title">Portfolio: Selected Compounds</div>
+  <div class="rx-subtitle">50 repos &middot; Built in 2 weeks &middot; Each one has a behavioral mechanism at its core</div>
+  <div class="rx-body">
+    <ul class="project-list">
+      <li><span class="pname">Persuasion-Max</span><br><span class="pdesc">Computational persuasion research system. Mechanistic influence modeling, scoring pipelines, calibration audits. The thesis: bridge tech, neuroscience, and economics to make algorithmic influence measurable.</span></li>
+      <li><span class="pname">Wild Hearts</span><br><span class="pdesc">Open-world animal taming game. Procedural Canvas rendering, emotional creature AI with parasocial bonding, variable reward schedules, endowed progress. Every engagement mechanic cited in the README.</span></li>
+      <li><span class="pname">ARCANE</span><br><span class="pdesc">14-game API credits casino platform. Crash, Mines, Plinko, Blackjack, Duck Cross, Dragon Tower &mdash; each game a standalone HTML file with canvas rendering and Web Audio. Built in one session.</span></li>
+      <li><span class="pname">Read the Room / SWAY / TELLS</span><br><span class="pdesc">Four iterations of social skill training through conversation simulation. Each character has a psychological profile. Every response is scored. The final character is immune to every influence technique except authenticity.</span></li>
+      <li><span class="pname">Boundpets</span><br><span class="pdesc">Creature collection game where the type effectiveness chart is based on attachment theory. 5 attachment styles, breeding, merging, 5-stage evolution.</span></li>
+      <li><span class="pname">Aftergreen</span><br><span class="pdesc">Card-drafting ecosystem builder. 5-card mystery drafts with 15% golden / 5% mystery variant rates. Scarce deck strategy. 60fps Canvas rendering.</span></li>
+      <li><span class="pname">Forecast</span><br><span class="pdesc">Hormone cycle intelligence disguised as a weather app. The product insight is the disguise itself &mdash; reducing stigma by changing the frame.</span></li>
+      <li><span class="pname">27 Claude Code Skills</span><br><span class="pdesc">Codified expertise in gamification architecture, neurochemical engagement (DOSE framework), haptics engineering, persuasion psychology, cognitive flow design. Reusable instruction sets that produce consistent results.</span></li>
+    </ul>
+  </div>
+  <div class="rx-tags">
+    <span class="rx-tag">Swift</span>
+    <span class="rx-tag">SwiftUI</span>
+    <span class="rx-tag">Core Graphics</span>
+    <span class="rx-tag">Core Haptics</span>
+    <span class="rx-tag">React</span>
+    <span class="rx-tag">TypeScript</span>
+    <span class="rx-tag">Python</span>
+    <span class="rx-tag">Canvas 2D</span>
+    <span class="rx-tag">Web Audio</span>
+    <span class="rx-tag">Matter.js</span>
+    <span class="rx-tag">Claude API</span>
+    <span class="rx-tag">Supabase</span>
+    <span class="rx-tag">FastAPI</span>
+    <span class="rx-tag">Behavioral Science</span>
+  </div>
+</div>
+
+<!-- ═══ THE PERSUASION-MAX PITCH ═══ -->
+<div class="rx-section">
+  <div class="rx-header"><span class="rx-symbol">&#8478;</span> differential diagnosis</div>
+  <div class="rx-divider"></div>
+  <div class="rx-title">Why You Can't Find This Elsewhere</div>
+  <div class="rx-subtitle">The Persuasion-Max framework applied to hiring</div>
+  <div class="rx-body">
+    <p><strong>Your engineering candidates</strong> can ship the feature. They can't tell you why users bounce off it. They'll build exactly what the spec says and then watch adoption flatline because the spec modeled a rational user that doesn't exist.</p>
+    <p><strong>Your design candidates</strong> can make it feel right. They can't instrument the feeling. They'll polish the surface and then have no answer when the A/B test shows the polished version performs the same as the rough one, because the problem was never visual.</p>
+    <p><strong>Your behavioral science candidates</strong> can explain the mechanism. They can't build the product. They'll write a research brief that's correct and comprehensive and then hand it to an engineer who strips the psychology during implementation because it wasn't expressed in code.</p>
+    <p><span class="highlight">I am the bridge. I design the behavioral system, write the production code, and ship the product &mdash; with the psychology intact, not as a PDF attachment.</span></p>
+    <p>50 repos in 2 weeks. 14 casino games in a day. A procedural open-world game with emotional creature AI. A computational persuasion research system. A hormone tracker disguised as a weather app. 27 reusable behavioral design skills.</p>
+    <p><strong>The throughline:</strong> every single thing I build has a psychological mechanism at its core &mdash; not as decoration, but as the architecture. The mechanism is why the product works. Remove it and you have a todo app.</p>
+  </div>
+</div>
+
+<!-- ═══ COMPETITIVE ADVANTAGES ═══ -->
+<div class="rx-section">
+  <div class="rx-header"><span class="rx-symbol">&#8478;</span> pharmacokinetics</div>
+  <div class="rx-divider"></div>
+  <div class="rx-title">Unfair Advantages</div>
+  <div class="rx-body">
+    <table class="gap-table">
+      <tr><th>Factor</th><th>What it means</th></tr>
+      <tr><td>Speed</td><td>50 repos in 2 weeks. 14 games in a day. I ship in days, not sprints.</td></tr>
+      <tr><td>Range</td><td>Native iOS, React web, Canvas games, Python ML, CLI tools, design systems. Whatever the idea requires.</td></tr>
+      <tr><td>Behavioral depth</td><td>Every product has a DOSE framework analysis, engagement architecture, and retention mechanics baked in. Not added later.</td></tr>
+      <tr><td>Iteration</td><td>4 generations of conversation training apps. 2 versions of Jeju Island. I refine, not just ship.</td></tr>
+      <tr><td>Systems thinking</td><td>27 codified skills that produce consistent behavioral design. This isn't intuition &mdash; it's a system.</td></tr>
+      <tr><td>Taste</td><td>Procedural Canvas art. Spring physics. Radial gradients. Specular highlights. I care about how it feels, not just how it works.</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ═══ CONTACT ═══ -->
+<div class="dark-section">refills: &infin; &middot; no prior authorization required</div>
+
+<div class="counter" style="position:relative">
+  <div class="counter-rx">&#8478; Consultation</div>
+  <div class="counter-heading">Bring the problem users bounce off.</div>
+  <div class="counter-sub">I build the behavioral layer that makes the feature actually get adopted.</div>
+  <a class="counter-btn" href="https://cal.com/melmarion" target="_blank">Book Appointment</a>
+  <div style="font-family:'JetBrains Mono',monospace;font-size:0.48rem;color:rgba(255,255,255,0.12);margin-top:10px;letter-spacing:0.08em">
+    No referral needed &middot; Response time: &lt;1 day &middot; The first conversation is diagnostic.
+  </div>
+</div>
+
+<div class="dark-section" style="margin-top:30px">
+  <a href="https://github.com/melmarion" target="_blank" style="color:rgba(255,255,255,0.25);text-decoration:none">github.com/melmarion</a>
+  &middot;
+  <a href="https://linkedin.com/in/melmarion" target="_blank" style="color:rgba(255,255,255,0.25);text-decoration:none">linkedin.com/in/melmarion</a>
+  &middot;
+  <a href="https://cal.com/melmarion" target="_blank" style="color:rgba(255,255,255,0.25);text-decoration:none">cal.com/melmarion</a>
+</div>
+
+</div>
+
+<footer>
+  <p>caution: may cause compulsive hiring</p>
+</footer>
+
+</body>
+</html>
