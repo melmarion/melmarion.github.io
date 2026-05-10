@@ -1,7 +1,7 @@
 # MARION MORANETZ
 
-(541) 507-7549 | Marion.m.moranetz@gmail.com | linkedin.com/in/melmarion
-github.com/melmarion | Open to Relocation
+(541) 507-7549 | Marion.m.moranetz@gmail.com | linkedin.com/in/marionmoranetz
+github.com/moranetz | Open to Relocation
 
 ---
 

@@ -1,4 +1,4 @@
-# melmarion.github.io
+# moranetz.github.io
 
 Portfolio site for Marion Moranetz: behavioral scientist, persuasion-systems builder, and native iOS product designer.
 
