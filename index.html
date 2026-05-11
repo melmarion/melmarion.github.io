@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Marion Moranetz | Behavioral Scientist Who Codes</title>
+<title>Marion Moranetz | Indie iOS Founder & Persuasion-Systems Builder</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -877,7 +877,7 @@ footer p {
   <p class="tagline">I build tools that make invisible systems visible.</p>
   <p class="header-intro">You&rsquo;ve seen portfolios before. Probably too many this week. Most of them list the same frameworks, show the same todo apps, claim the same passion for clean code. And somewhere around the twentieth one, you stopped reading the descriptions and started just scanning for something that felt different.</p>
   <p class="header-intro">That instinct is right. Because what you&rsquo;re actually looking for isn&rsquo;t on the resume.</p>
-  <p class="header-stats">80 repos &middot; 32 public &middot; 126K datapoints &middot; Everything rendered from first principles.</p>
+  <p class="header-stats">17 iOS apps shipped &middot; 39 public repos &middot; Bayesian-meta-analysis of 39 persuasion techniques &middot; Everything rendered from first principles.</p>
 </header>
 
 <div class="grid" id="grid">
@@ -1148,6 +1148,30 @@ const Snd = {
 
 // ═══ PROJECT DATA ═══
 const projects = [
+  {
+    chem: 'caffeine',
+    chemName: 'CAFFEINE',
+    project: 'outreach-lab',
+    desc: 'Technique-tagged cold-outreach generator. Cites posteriors from the Closing Evidence Atlas. Five email variants per target, each backed by a real effect size.',
+    rx: 'OL-V02',
+    dose: '6 techniques / per-company tailoring',
+    tags: ['Python', 'Click', 'Claude API'],
+    url: 'https://github.com/Moranetz/outreach-lab',
+    rotate: -1.2,
+    hasCanvas: false
+  },
+  {
+    chem: 'serotonin',
+    chemName: 'SEROTONIN',
+    project: 'Closing Evidence Atlas',
+    desc: 'Pre-registered Bayesian random-effects meta-analysis of 39 named persuasion techniques. 44 records extracted, 6 per-technique posteriors. 15 named closing techniques have zero peer-reviewed studies.',
+    rx: 'CEA-V05',
+    dose: '11,785 records screened / 6 posteriors',
+    tags: ['Python', 'Bayesian', 'PRISMA 2020'],
+    url: 'https://github.com/Moranetz/closing-evidence-atlas',
+    rotate: 0.6,
+    hasCanvas: false
+  },
   {
     chem: 'psilocybin',
     chemName: 'PSILOCYBIN',
