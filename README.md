@@ -1,15 +1,16 @@
 # moranetz.github.io
 
-Portfolio site for Marion Moranetz: behavioral scientist, persuasion-systems builder, and native iOS product designer.
+Portfolio site for Marion Moranetz — indie iOS founder, persuasion-systems builder, AE candidate.
 
 This repo is the public front door for the surrounding body of work. Its job is not to be technically impressive. Its job is to make the right projects legible fast.
 
-## What The Site Needs To Do
+For the deeper curated showcase, see [Moranetz/selected-work](https://github.com/Moranetz/selected-work) (live at [moranetz.github.io/selected-work](https://moranetz.github.io/selected-work/)).
+
+## What the site needs to do
 
 - establish the thesis quickly
 - show selected work without overwhelming the reader
-- connect behavioral systems thinking to product implementation
-- give people a clean path into flagship projects like Persuasion-Max and Social Pilot
+- give people a clean path into flagship projects (Atlas, AE Playbook, the persuasion-training iOS trio)
 
 ## Repo Contents
 
